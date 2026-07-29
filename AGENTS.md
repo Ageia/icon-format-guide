@@ -15,10 +15,17 @@
 ## 새 세션 시작 체크리스트
 
 1. `README.md` + 이 파일(`AGENTS.md`) 읽기  
-2. `git log -10 --oneline` / `git status`  
-3. `index.html` — 탭 목록, `setGuide`, 해시 라우팅, stub(`GUIDES`)  
-4. `format-guide.html` — **완성 가이드 톤·UI 레퍼런스**  
-5. 작업 후 `main`에 커밋·push → GitHub Pages 자동 반영 (1~2분)
+2. **`docs/TODO.md`** — Now / Next 백로그 확인·작업 후 체크  
+3. `git log -10 --oneline` / `git status`  
+4. `index.html` — 탭 목록, `setGuide`, 해시 라우팅, stub(`GUIDES`)  
+5. `format-guide.html` — **완성 가이드 톤·UI 레퍼런스**  
+6. 작업 후 `main`에 커밋·push → GitHub Pages 자동 반영 (1~2분)
+
+## 백로그
+
+- 하고 싶은 일·아이디어: **`docs/TODO.md`**
+- Now ≤ 3개. 완료 시 체크 후 Done으로 이동.
+- 작업 시작/종료 시 TODO를 갱신하고 커밋에 포함하는 것을 권장.
 
 ## 파일 역할
 
@@ -28,6 +35,7 @@
 | `format-guide.html` | 아이콘 포맷 **완성** 가이드 (단독 페이지 + 허브 iframe) |
 | `README.md` | 사람용 소개·링크 표 |
 | `AGENTS.md` | AI/다음 세션용 규칙·맥락 |
+| `docs/TODO.md` | 백로그 (Now / Next / Later / Done) |
 | `badge_star.*` / `badge_cloud.*` | 아이콘 포맷 샘플 에셋 |
 | `badge_star_anim.*` | 애니 샘플 (가이드 본문 연동은 아직 약함) |
 
@@ -83,12 +91,14 @@
 - GitHub Pages: `main` / `/` (project site)  
 - 계정: `Ageia` (작업 시 `gh auth status`로 확인 가능)
 
-## 다음 작업 후보 (우선순위 제안)
+## 다음 작업 후보
 
-1. **텍스처 임포트 세팅** 또는 **텍스처 포맷** 풀 가이드 (아이콘 가이드와 같은 깊이)  
-2. 완성 가이드를 `guides/` 폴더로 정리할지 결정  
-3. 한/영 토글 (나중)  
-4. repo/표시 이름을 허브 성격에 맞게 바꿀지 (`game-dev-guides` 등) — 사용자 확인 후
+상세·체크리스트는 **`docs/TODO.md`** 가 소스 오브 트루스.  
+우선순위 제안만 여기 요약:
+
+1. Now: 텍스처 임포트 세팅 풀 가이드, 허브 로드 방식 정리  
+2. Next: 나머지 언리얼/TA 가이드 순차 완성  
+3. Later: 한/영 토글, repo 이름 변경 등
 
 ## 검증
 

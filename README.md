@@ -33,8 +33,12 @@
 - `index.html` — 허브 (사이드바 탭 + 가이드 패널)
 - `format-guide.html` — 아이콘 포맷 완성 가이드 (단독 문서)
 - `AGENTS.md` — 새 세션·AI용 프로젝트 규칙/맥락
+- `docs/TODO.md` — 하고 싶은 일 백로그 (Now / Next / Later)
 - `badge_cloud.*` / `badge_star.*` — 멀티 포맷 아이콘 샘플
 
 ## For next session / AI
 
-새 대화에서 이어서 작업할 때는 repo를 연 뒤 **`AGENTS.md` → `README.md` → `git log`** 순으로 읽으면 됩니다.
+새 대화에서 이어서 작업할 때는 repo를 연 뒤  
+**`AGENTS.md` → `docs/TODO.md` → `README.md` → `git log`** 순으로 읽으면 됩니다.
+
+아이디어 추가: `docs/TODO.md` 해당 섹션에 `- [ ] …` 한 줄 넣고 커밋.
