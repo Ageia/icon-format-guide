@@ -3,24 +3,964 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="0; url=format-guide.html" />
-  <title>Icon · Format Guide</title>
-  <link rel="canonical" href="format-guide.html" />
+  <title>실전 가이드 허브 · Game Dev Field Guides</title>
+  <meta name="description" content="게임/언리얼/TA를 위한 실전 선택 가이드 모음. 아이콘 포맷, 텍스처, 머티리얼, Nanite 등." />
   <style>
+    :root {
+      --bg: #0f1117;
+      --bg-elevated: #141821;
+      --bg-card: #1c2030;
+      --bg-soft: #242a3a;
+      --bg-sidebar: rgba(15, 17, 23, 0.92);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text: #eef0f6;
+      --text-muted: #9aa3b8;
+      --text-dim: #6b7389;
+      --accent: #a78bfa;
+      --accent-2: #67e8f9;
+      --mint: #6ee7b7;
+      --amber: #fbbf24;
+      --rose: #fb7185;
+      --blue: #60a5fa;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 16px;
+      --sidebar-w: 300px;
+      --font: "Segoe UI", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      --mono: "Cascadia Code", "Consolas", "SF Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
     body {
-      margin: 0;
-      min-height: 100vh;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow: hidden;
+    }
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, .mono {
+      font-family: var(--mono);
+      font-size: 0.9em;
+      background: rgba(255,255,255,0.06);
+      padding: 1px 6px;
+      border-radius: 6px;
+      color: #e9d5ff;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      background:
+        linear-gradient(180deg, rgba(167,139,250,0.08), transparent 40%),
+        var(--bg-sidebar);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      min-height: 0;
+    }
+
+    .brand {
+      padding: 22px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      background: linear-gradient(120deg, #fff 0%, #e9d5ff 45%, #a5f3fc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .brand p {
+      font-size: 12.5px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .nav-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px 20px;
+    }
+
+    .nav-group {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 12px 10px 8px;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 36px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      text-align: left;
+      padding: 10px 10px;
+      margin-bottom: 4px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font: inherit;
+      transition: 0.15s ease;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .nav-item.active {
+      background: linear-gradient(135deg, rgba(167,139,250,0.18), rgba(103,232,249,0.08));
+      border-color: rgba(167,139,250,0.35);
+      color: var(--text);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .nav-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       display: grid;
       place-items: center;
-      font-family: "Segoe UI", "Apple SD Gothic Neo", sans-serif;
-      background: #0f1117;
-      color: #eef0f6;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-soft);
+      color: #e9d5ff;
+      flex-shrink: 0;
     }
-    a { color: #a78bfa; }
+
+    .nav-item.active .nav-icon {
+      background: linear-gradient(135deg, rgba(167,139,250,0.45), rgba(103,232,249,0.25));
+      color: #fff;
+    }
+
+    .nav-text strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: inherit;
+      line-height: 1.3;
+    }
+
+    .nav-text span {
+      display: block;
+      font-size: 11.5px;
+      color: var(--text-dim);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .nav-item.active .nav-text span { color: var(--text-muted); }
+
+    .badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .badge-live {
+      background: rgba(110,231,183,0.15);
+      color: var(--mint);
+      border: 1px solid rgba(110,231,183,0.25);
+    }
+
+    .badge-soon {
+      background: rgba(251,191,36,0.12);
+      color: var(--amber);
+      border: 1px solid rgba(251,191,36,0.22);
+    }
+
+    .sidebar-foot {
+      padding: 12px 16px 16px;
+      border-top: 1px solid var(--border);
+      font-size: 11.5px;
+      color: var(--text-dim);
+    }
+
+    .sidebar-foot a { color: var(--text-muted); }
+
+    /* Main */
+    .main {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      background:
+        radial-gradient(900px 400px at 80% -10%, rgba(167,139,250,0.12), transparent 50%),
+        radial-gradient(700px 300px at 10% 0%, rgba(103,232,249,0.08), transparent 45%),
+        var(--bg);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(15,17,23,0.55);
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-left { min-width: 0; }
+    .topbar h2 {
+      font-size: 1.05rem;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .topbar .sub {
+      font-size: 12.5px;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+
+    .top-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 650;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: none;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+      background: rgba(255,255,255,0.07);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, rgba(167,139,250,0.35), rgba(103,232,249,0.2));
+      border-color: rgba(167,139,250,0.4);
+      color: #fff;
+    }
+
+    .menu-btn {
+      display: none;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .content {
+      flex: 1;
+      min-height: 0;
+      position: relative;
+    }
+
+    .panel {
+      display: none;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .panel.active { display: flex; flex-direction: column; }
+
+    .panel-frame {
+      flex: 1;
+      border: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+    }
+
+    .panel-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 28px 48px;
+    }
+
+    .panel-inner {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .hero-card {
+      padding: 28px 28px 24px;
+      border-radius: 22px;
+      border: 1px solid var(--border-strong);
+      background:
+        linear-gradient(145deg, rgba(167,139,250,0.14), rgba(103,232,249,0.05) 50%, rgba(28,32,48,0.92));
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+
+    .hero-card .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .pill {
+      font-size: 12px;
+      font-weight: 650;
+      padding: 4px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .hero-card h3 {
+      font-size: clamp(1.35rem, 3vw, 1.75rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 10px;
+      line-height: 1.25;
+    }
+
+    .hero-card p {
+      color: var(--text-muted);
+      max-width: 62ch;
+      font-size: 0.98rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 18px;
+    }
+
+    .card h4 {
+      font-size: 0.98rem;
+      font-weight: 750;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .card p, .card li {
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .card ul {
+      list-style: none;
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .card ul li {
+      padding-left: 18px;
+      position: relative;
+    }
+
+    .card ul li::before {
+      content: "·";
+      position: absolute;
+      left: 4px;
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 750;
+      margin: 22px 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .decision {
+      display: grid;
+      gap: 8px;
+    }
+
+    .decision-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .decision-item .q { font-size: 13.5px; color: var(--text-muted); }
+    .decision-item .q strong { color: var(--text); }
+    .decision-item .a {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 999px;
+      white-space: nowrap;
+      background: rgba(167,139,250,0.15);
+      color: #c4b5fd;
+      border: 1px solid rgba(167,139,250,0.25);
+    }
+
+    .callout {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(251,191,36,0.22);
+      background: rgba(251,191,36,0.08);
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .callout strong { color: #fde68a; }
+
+    .toc-mini {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 4px;
+    }
+
+    .toc-mini span {
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text-dim);
+    }
+
+    .backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 30;
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        width: min(var(--sidebar-w), 88vw);
+        z-index: 40;
+        transform: translateX(-105%);
+        transition: transform 0.2s ease;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .menu-btn { display: grid; }
+      .backdrop.open { display: block; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .decision-item { grid-template-columns: 1fr; }
+      .decision-item .a { justify-self: start; }
+      .panel-scroll { padding: 20px 16px 40px; }
+    }
   </style>
 </head>
 <body>
-  <p>이동 중… <a href="format-guide.html">포맷 가이드 열기</a></p>
-  <script>location.replace("format-guide.html");</script>
+  <div class="backdrop" id="backdrop" aria-hidden="true"></div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-kicker">Game Dev · Unreal · TA</div>
+        <h1>실전 가이드 허브</h1>
+        <p>포맷·설정·렌더 기능을 “언제 뭘 쓸지” 빠르게 고르는 치트시트 모음입니다. (한국어)</p>
+      </div>
+
+      <div class="nav-scroll" id="nav">
+        <div class="nav-group">완성</div>
+        <button type="button" class="nav-item active" data-guide="icon" aria-current="page">
+          <span class="nav-icon">ICO</span>
+          <span class="nav-text">
+            <strong>아이콘 파일 포맷</strong>
+            <span>PNG·SVG·ICO·WebP 선택</span>
+          </span>
+          <span class="badge badge-live">완성</span>
+        </button>
+
+        <div class="nav-group">언리얼 · TA (작성 예정)</div>
+
+        <button type="button" class="nav-item" data-guide="texture">
+          <span class="nav-icon">TEX</span>
+          <span class="nav-text">
+            <strong>텍스처 포맷</strong>
+            <span>BC / ASTC / 채널 패킹</span>
+          </span>
+          <span class="badge badge-soon">예정</span>
+        </button>
+
+        <button type="button" class="nav-item" data-guide="material">
+          <span class="nav-icon">MAT</span>
+          <span class="nav-text">
+            <strong>머티리얼 블렌드 모드</strong>
+            <span>Opaque·Masked·Translucent</span>
+          </span>
+          <span class="badge badge-soon">예정</span>
+        </button>
+
+        <button type="button" class="nav-item" data-guide="nanite">
+          <span class="nav-icon">NAN</span>
+          <span class="nav-text">
+            <strong>Nanite vs 일반 메시</strong>
+            <span>언제 켜고 언제 끄나</span>
+          </span>
+          <span class="badge badge-soon">예정</span>
+        </button>
+
+        <button type="button" class="nav-item" data-guide="import">
+          <span class="nav-icon">IMP</span>
+          <span class="nav-text">
+            <strong>텍스처 임포트 세팅</strong>
+            <span>sRGB · Normal · Compression</span>
+          </span>
+          <span class="badge badge-soon">예정</span>
+        </button>
+
+        <button type="button" class="nav-item" data-guide="lighting">
+          <span class="nav-icon">LIT</span>
+          <span class="nav-text">
+            <strong>Lumen vs 베이크</strong>
+            <span>동적·고정 조명 선택</span>
+          </span>
+          <span class="badge badge-soon">예정</span>
+        </button>
+
+        <button type="button" class="nav-item" data-guide="vfx">
+          <span class="nav-icon">VFX</span>
+          <span class="nav-text">
+            <strong>VFX 텍스처·파티클</strong>
+            <span>SubUV · Flipbook · Niagara</span>
+          </span>
+          <span class="badge badge-soon">예정</span>
+        </button>
+
+        <button type="button" class="nav-item" data-guide="collision">
+          <span class="nav-icon">COL</span>
+          <span class="nav-text">
+            <strong>충돌 메시</strong>
+            <span>Simple · Complex · UCX</span>
+          </span>
+          <span class="badge badge-soon">예정</span>
+        </button>
+      </div>
+
+      <div class="sidebar-foot">
+        <div><a href="https://github.com/Ageia/icon-format-guide" target="_blank" rel="noopener">GitHub 저장소</a></div>
+        <div style="margin-top:4px">언어 토글은 추후 지원 예정</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+          <button type="button" class="menu-btn" id="menuBtn" aria-label="메뉴 열기">☰</button>
+          <div class="topbar-left">
+            <h2 id="topTitle">아이콘 파일 포맷</h2>
+            <div class="sub" id="topSub">완성 가이드 · 샘플 파일과 함께 비교</div>
+          </div>
+        </div>
+        <div class="top-actions">
+          <a class="btn" id="openStandalone" href="format-guide.html" target="_blank" rel="noopener">단독 페이지</a>
+          <a class="btn btn-primary" href="https://github.com/Ageia/icon-format-guide" target="_blank" rel="noopener">저장소</a>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- Live: icon guide via iframe -->
+        <section class="panel active" id="panel-icon" data-title="아이콘 파일 포맷" data-sub="완성 가이드 · 샘플 파일과 함께 비교" data-standalone="format-guide.html">
+          <iframe class="panel-frame" src="format-guide.html" title="아이콘 파일 포맷 가이드" loading="eager"></iframe>
+        </section>
+
+        <!-- Placeholder guides -->
+        <section class="panel" id="panel-texture" data-title="텍스처 포맷" data-sub="작성 예정 · 목차와 선택 뼈대">
+          <div class="panel-scroll"><div class="panel-inner" data-stub="texture"></div></div>
+        </section>
+        <section class="panel" id="panel-material" data-title="머티리얼 블렌드 모드" data-sub="작성 예정 · 목차와 선택 뼈대">
+          <div class="panel-scroll"><div class="panel-inner" data-stub="material"></div></div>
+        </section>
+        <section class="panel" id="panel-nanite" data-title="Nanite vs 일반 메시" data-sub="작성 예정 · 목차와 선택 뼈대">
+          <div class="panel-scroll"><div class="panel-inner" data-stub="nanite"></div></div>
+        </section>
+        <section class="panel" id="panel-import" data-title="텍스처 임포트 세팅" data-sub="작성 예정 · 목차와 선택 뼈대">
+          <div class="panel-scroll"><div class="panel-inner" data-stub="import"></div></div>
+        </section>
+        <section class="panel" id="panel-lighting" data-title="Lumen vs 베이크" data-sub="작성 예정 · 목차와 선택 뼈대">
+          <div class="panel-scroll"><div class="panel-inner" data-stub="lighting"></div></div>
+        </section>
+        <section class="panel" id="panel-vfx" data-title="VFX 텍스처·파티클" data-sub="작성 예정 · 목차와 선택 뼈대">
+          <div class="panel-scroll"><div class="panel-inner" data-stub="vfx"></div></div>
+        </section>
+        <section class="panel" id="panel-collision" data-title="충돌 메시" data-sub="작성 예정 · 목차와 선택 뼈대">
+          <div class="panel-scroll"><div class="panel-inner" data-stub="collision"></div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const GUIDES = {
+      texture: {
+        pills: ["언리얼", "TA", "모바일·콘솔"],
+        title: "텍스처 포맷 실전 가이드",
+        lead: "소스 PNG와 패키징된 BC/ASTC 결과물은 다릅니다. 채널 수·알파·노멀·모바일 대역폭을 기준으로 “무엇으로 압축할지”를 고르는 치트시트입니다.",
+        toc: ["한눈에 표", "BC1~7 언제", "ASTC", "채널 패킹", "용량 vs 품질", "FAQ"],
+        cards: [
+          {
+            h: "다룰 핵심",
+            items: [
+              "Diffuse/Albedo: BC1 vs BC7 vs ASTC",
+              "Normal: BC5, sRGB 끄기",
+              "Mask 패킹 (R/G/B/A 역할)",
+              "UI 텍스처 vs 월드 텍스처"
+            ]
+          },
+          {
+            h: "목표 독자",
+            items: [
+              "언리얼 TA / 그래픽 프로그래머",
+              "모바일 최적화 담당",
+              "임포트 세팅을 자주 만지는 사람"
+            ]
+          }
+        ],
+        decisions: [
+          ["불투명 알베도, 알파 없음", "BC1 / ASTC 4x4"],
+          ["부드러운 그라데이션·UI", "BC7 또는 고품질 ASTC"],
+          ["노멀 맵", "BC5 + sRGB Off"],
+          ["마스크 4장을 한 장에", "채널 패킹 + BC 선택"]
+        ],
+        note: "완성본에서는 아이콘 가이드처럼 비교표·용량 감각·실수 체크리스트를 넣을 예정입니다."
+      },
+      material: {
+        pills: ["머티리얼", "오버드로", "정렬"],
+        title: "머티리얼 블렌드 모드 선택",
+        lead: "Opaque / Masked / Translucent / Additive를 “예쁘게”가 아니라 “비용과 정렬” 기준으로 고르는 가이드입니다.",
+        toc: ["모드 비교표", "오버드로", "Dithered LOD", "유리·파티클", "치트시트"],
+        cards: [
+          {
+            h: "다룰 핵심",
+            items: [
+              "Masked vs Translucent 성능 차이",
+              "Sort Priority, 굴절, 수신 그림자",
+              "초목: Masked + Dither",
+              "유리: Translucent 함정"
+            ]
+          },
+          {
+            h: "목표 독자",
+            items: ["TA", "VFX", "환경 아티스트", "최적화 담당"]
+          }
+        ],
+        decisions: [
+          ["완전 불투명 표면", "Opaque"],
+          ["나뭇잎·철망 (컷아웃)", "Masked"],
+          ["유리·연기·부드러운 페이드", "Translucent"],
+          ["폭발 하이라이트·가산 광", "Additive"]
+        ],
+        note: "작성 예정. 프로파일러(stat unit / GPU) 관점 팁을 함께 정리합니다."
+      },
+      nanite: {
+        pills: ["UE5", "지오메트리", "WPO"],
+        title: "Nanite vs 일반 메시",
+        lead: "고폴리 배경에 강력하지만, 마스크·월드 포지션 오프셋·투명·일부 스키닝 제약이 있습니다. 켜야 할 때와 꺼야 할 때를 나눕니다.",
+        toc: ["강점", "제한 사항", "폴백 메시", "프로프 vs 캐릭터", "FAQ"],
+        cards: [
+          {
+            h: "다룰 핵심",
+            items: [
+              "Nanite 권장 에셋 유형",
+              "Masked / WPO / 투명 이슈",
+              "Landscape·초목 전략",
+              "비-Nanite로 둘 것"
+            ]
+          },
+          {
+            h: "목표 독자",
+            items: ["환경 TA", "테크 아트", "월드 빌더"]
+          }
+        ],
+        decisions: [
+          ["고폴리 석재·건물 프랍", "Nanite ON"],
+          ["투명 유리 위주", "일반 메시"],
+          ["강한 WPO 초목", "케이스별 (제한 확인)"],
+          ["히어로 캐릭터 애니메이션", "보통 비-Nanite"]
+        ],
+        note: "엔진 버전에 따라 제약이 달라져, 문서에 버전 메모를 남길 예정입니다."
+      },
+      import: {
+        pills: ["임포트", "sRGB", "Compression"],
+        title: "텍스처 임포트 세팅 치트시트",
+        lead: "언리얼 텍스처 에디터에서 매일 누르는 토글만 모아, 잘못 켜면 생기는 증상(노멀 보라색, UI 번짐)과 함께 정리합니다.",
+        toc: ["sRGB 표", "Compression Settings", "Mip Gen", "LOD Bias", "실수 갤러리"],
+        cards: [
+          {
+            h: "다룰 핵심",
+            items: [
+              "Albedo sRGB On / Data sRGB Off",
+              "Normalmap / Masks / Grayscale",
+              "NoMipmaps가 필요한 UI",
+              "Virtual Texture 여부"
+            ]
+          },
+          {
+            h: "목표 독자",
+            items: ["모든 언리얼 작업자", "주니어 TA", "아웃소싱 검수"]
+          }
+        ],
+        decisions: [
+          ["컬러 알베도", "sRGB On + Default"],
+          ["Roughness/Metallic 마스크", "sRGB Off + Masks"],
+          ["노멀", "Normalmap 압축"],
+          ["픽셀 퍼펙트 UI", "NoMipmaps 검토"]
+        ],
+        note: "아이콘 가이드의 ‘한눈에 표’ 포맷을 그대로 적용하기 좋은 주제입니다."
+      },
+      lighting: {
+        pills: ["Lumen", "라이트맵", "퍼포먼스"],
+        title: "Lumen vs 베이크 조명",
+        lead: "동적 GI가 필요한 장면과, 고정 라이트맵이 더 싼 장면을 타깃 플랫폼 기준으로 나눕니다.",
+        toc: ["비교표", "실내/야외", "모바일", "시네마틱", "하이브리드"],
+        cards: [
+          {
+            h: "다룰 핵심",
+            items: [
+              "Lumen Hardware vs Software",
+              "Static Lightmap 워크플로",
+              "믹스: Stationary + Lumen",
+              "반사·누출 트러블슈팅"
+            ]
+          },
+          {
+            h: "목표 독자",
+            items: ["라이팅 아티스트", "TA", "테크 디렉터"]
+          }
+        ],
+        decisions: [
+          ["하이엔드 PC, 파괴·시간대 변화", "Lumen"],
+          ["모바일/저사양 고정 씬", "베이크 위주"],
+          ["시네마틱 고품질", "Lumen + 고해상 설정"],
+          ["릴리스 타깃 혼재", "플랫폼별 설정 분기"]
+        ],
+        note: "‘절대 Lumen’이 아니라 프로젝트 예산 관점으로 쓸 예정입니다."
+      },
+      vfx: {
+        pills: ["Niagara", "SubUV", "오버드로"],
+        title: "VFX 텍스처·파티클 가이드",
+        lead: "플립북, soft particle, 메시 파티클, 라이팅 여부까지 — VFX 에셋을 넣을 때 포맷과 머티리얼 선택을 묶어서 설명합니다.",
+        toc: ["시트 레이아웃", "SubUV", "블렌드", "GPU 비용", "체크리스트"],
+        cards: [
+          {
+            h: "다룰 핵심",
+            items: [
+              "Flipbook 해상도·프레임 수",
+              "Additive vs Translucent 연기",
+              "소프트 파티클 뎁스 페이드",
+              "메시 파티클 vs 스프라이트"
+            ]
+          },
+          {
+            h: "목표 독자",
+            items: ["VFX 아티스트", "TA", "최적화 담당"]
+          }
+        ],
+        decisions: [
+          ["짧은 루프 불꽃", "Flipbook + Additive"],
+          ["두꺼운 연기 볼륨감", "Translucent / 메시 검토"],
+          ["지면에 닿는 안개", "Soft particle"],
+          ["모바일 잔버짓", "프레임·오버드로 축소"]
+        ],
+        note: "샘플 시트 이미지와 함께 정리하면 아이콘 가이드와 결이 잘 맞습니다."
+      },
+      collision: {
+        pills: ["피직스", "UCX", "쿼리"],
+        title: "충돌 메시 실전 가이드",
+        lead: "Simple / Complex, UCX 자동 컨벡스, 캐릭터 캡슐 vs 프랍 콜리전을 용도별로 고르는 짧은 실무 문서입니다.",
+        toc: ["Simple vs Complex", "UCX 규칙", "트레이스", "퍼포먼스", "FAQ"],
+        cards: [
+          {
+            h: "다룰 핵심",
+            items: [
+              "Complex as Simple 함정",
+              "UCX_ 네이밍과 볼록 분해",
+              "Query Only vs Physics Sim",
+              "캐릭터·발사체 트레이스 채널"
+            ]
+          },
+          {
+            h: "목표 독자",
+            items: ["레벨 디자이너", "TA", "게임플레이 프로그래머"]
+          }
+        ],
+        decisions: [
+          ["정적 배경 걷기", "Simple 콜리전 우선"],
+          ["정확한 총알 관통/엄폐", "Complex 쿼리 검토"],
+          ["물리 시뮬레이션 프랍", "단순한 컨벡스"],
+          ["캐릭터", "캡슐 + 필요 시 추가 형태"]
+        ],
+        note: "디버그 뷰(플레이어 콜리전) 스크린샷 예시 예정."
+      }
+    };
+
+    function renderStub(key) {
+      const g = GUIDES[key];
+      if (!g) return "";
+      const pills = g.pills.map((p) => `<span class="pill">${p}</span>`).join("");
+      const toc = g.toc.map((t) => `<span>${t}</span>`).join("");
+      const cards = g.cards.map((c) => `
+        <article class="card">
+          <h4>${c.h}</h4>
+          <ul>${c.items.map((i) => `<li>${i}</li>`).join("")}</ul>
+        </article>`).join("");
+      const decisions = g.decisions.map(([q, a]) => `
+        <div class="decision-item">
+          <div class="q"><strong>${q}</strong></div>
+          <div class="a">${a}</div>
+        </div>`).join("");
+
+      return `
+        <div class="hero-card">
+          <div class="pills">${pills}<span class="pill">작성 예정</span></div>
+          <h3>${g.title}</h3>
+          <p>${g.lead}</p>
+        </div>
+        <h3 class="section-title">예정 목차</h3>
+        <div class="toc-mini">${toc}</div>
+        <div class="grid-2" style="margin-top:16px">${cards}</div>
+        <h3 class="section-title">초안 선택 가이드</h3>
+        <div class="decision">${decisions}</div>
+        <div class="callout"><strong>상태:</strong> ${g.note}</div>
+      `;
+    }
+
+    // Fill stubs once
+    document.querySelectorAll("[data-stub]").forEach((el) => {
+      el.innerHTML = renderStub(el.getAttribute("data-stub"));
+    });
+
+    const navItems = [...document.querySelectorAll(".nav-item")];
+    const panels = [...document.querySelectorAll(".panel")];
+    const topTitle = document.getElementById("topTitle");
+    const topSub = document.getElementById("topSub");
+    const openStandalone = document.getElementById("openStandalone");
+    const sidebar = document.getElementById("sidebar");
+    const backdrop = document.getElementById("backdrop");
+    const menuBtn = document.getElementById("menuBtn");
+
+    function setGuide(id, pushHash = true) {
+      const panel = document.getElementById("panel-" + id);
+      if (!panel) return;
+
+      navItems.forEach((btn) => {
+        const on = btn.dataset.guide === id;
+        btn.classList.toggle("active", on);
+        if (on) btn.setAttribute("aria-current", "page");
+        else btn.removeAttribute("aria-current");
+      });
+
+      panels.forEach((p) => p.classList.toggle("active", p === panel));
+
+      topTitle.textContent = panel.dataset.title || id;
+      topSub.textContent = panel.dataset.sub || "";
+
+      if (panel.dataset.standalone) {
+        openStandalone.style.display = "";
+        openStandalone.href = panel.dataset.standalone;
+      } else {
+        openStandalone.style.display = "none";
+      }
+
+      if (pushHash) {
+        history.replaceState(null, "", "#" + id);
+      }
+
+      closeMenu();
+    }
+
+    navItems.forEach((btn) => {
+      btn.addEventListener("click", () => setGuide(btn.dataset.guide));
+    });
+
+    function openMenu() {
+      sidebar.classList.add("open");
+      backdrop.classList.add("open");
+    }
+    function closeMenu() {
+      sidebar.classList.remove("open");
+      backdrop.classList.remove("open");
+    }
+    menuBtn.addEventListener("click", () => {
+      if (sidebar.classList.contains("open")) closeMenu();
+      else openMenu();
+    });
+    backdrop.addEventListener("click", closeMenu);
+
+    // hash routing: #icon, #texture, ...
+    const initial = (location.hash || "#icon").slice(1);
+    if (document.getElementById("panel-" + initial)) setGuide(initial, false);
+    else setGuide("icon", false);
+
+    window.addEventListener("hashchange", () => {
+      const id = (location.hash || "#icon").slice(1);
+      if (document.getElementById("panel-" + id)) setGuide(id, false);
+    });
+  </script>
 </body>
 </html>
