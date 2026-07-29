@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>실전 가이드 허브 · Game Dev Field Guides</title>
   <meta name="description" content="게임/언리얼/TA를 위한 실전 선택 가이드 모음. 아이콘 포맷, 텍스처, 머티리얼, Nanite 등." />
+  <!-- hub-build: 2026-07-30-c — 예전 redirect용 index 캐시면 이 주석이 없음 -->
   <style>
     :root {
       --bg: #0f1117;
@@ -618,6 +622,7 @@
       <div class="sidebar-foot">
         <div><a href="https://github.com/Ageia/icon-format-guide" target="_blank" rel="noopener">GitHub 저장소</a></div>
         <div style="margin-top:4px">언어 토글은 추후 지원 예정</div>
+        <div style="margin-top:6px;opacity:0.75" id="hubBuild">hub-build 2026-07-30-c</div>
       </div>
     </aside>
 
@@ -902,6 +907,9 @@
         <div class="callout"><strong>상태:</strong> ${g.note}</div>
       `;
     }
+
+    // 예전 index(redirect → format-guide.html) 캐시가 아닌지 표시
+    console.info("[hub] build 2026-07-30-c loaded", location.href);
 
     // Fill stubs once
     document.querySelectorAll("[data-stub]").forEach((el) => {
