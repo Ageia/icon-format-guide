@@ -305,15 +305,28 @@
       flex: 1;
       min-height: 0;
       position: relative;
+      overflow: hidden;
     }
 
+    /* Stack panels so only the active one is visible (iframe hide bugs 방지) */
     .panel {
-      display: none;
-      height: 100%;
+      display: none !important;
+      position: absolute;
+      inset: 0;
+      flex-direction: column;
       min-height: 0;
+      background: var(--bg);
+      z-index: 0;
+      pointer-events: none;
+      visibility: hidden;
     }
 
-    .panel.active { display: flex; flex-direction: column; }
+    .panel.active {
+      display: flex !important;
+      z-index: 2;
+      pointer-events: auto;
+      visibility: visible;
+    }
 
     .panel-frame {
       flex: 1;
@@ -626,7 +639,7 @@
       <div class="content">
         <!-- Live: icon guide via iframe -->
         <section class="panel active" id="panel-icon" data-title="아이콘 파일 포맷" data-sub="완성 가이드 · 샘플 파일과 함께 비교" data-standalone="format-guide.html">
-          <iframe class="panel-frame" src="format-guide.html" title="아이콘 파일 포맷 가이드" loading="eager"></iframe>
+          <iframe class="panel-frame" id="iconFrame" data-src="format-guide.html" title="아이콘 파일 포맷 가이드" loading="lazy"></iframe>
         </section>
 
         <!-- Placeholder guides -->
@@ -903,10 +916,34 @@
     const sidebar = document.getElementById("sidebar");
     const backdrop = document.getElementById("backdrop");
     const menuBtn = document.getElementById("menuBtn");
+    const iconFrame = document.getElementById("iconFrame");
+    let currentGuide = null;
+
+    function syncIconFrame(activeId) {
+      if (!iconFrame) return;
+      const src = iconFrame.getAttribute("data-src") || "format-guide.html";
+      if (activeId === "icon") {
+        if (iconFrame.getAttribute("src") !== src) {
+          iconFrame.setAttribute("src", src);
+        }
+      } else {
+        // 비활성 시 iframe 언로드 — 다른 탭 위에 아이콘 가이드가 남는 문제 방지
+        if (iconFrame.getAttribute("src")) {
+          iconFrame.setAttribute("src", "about:blank");
+        }
+      }
+    }
 
     function setGuide(id, pushHash = true) {
       const panel = document.getElementById("panel-" + id);
-      if (!panel) return;
+      if (!panel) {
+        console.warn("[hub] unknown guide:", id);
+        return;
+      }
+      if (currentGuide === id && !pushHash) {
+        // still re-apply visibility (hash land / bfcache)
+      }
+      currentGuide = id;
 
       navItems.forEach((btn) => {
         const on = btn.dataset.guide === id;
@@ -915,27 +952,40 @@
         else btn.removeAttribute("aria-current");
       });
 
-      panels.forEach((p) => p.classList.toggle("active", p === panel));
+      panels.forEach((p) => {
+        const on = p === panel;
+        p.classList.toggle("active", on);
+        p.hidden = !on;
+        p.setAttribute("aria-hidden", on ? "false" : "true");
+      });
+
+      syncIconFrame(id);
 
       topTitle.textContent = panel.dataset.title || id;
       topSub.textContent = panel.dataset.sub || "";
 
       if (panel.dataset.standalone) {
+        openStandalone.hidden = false;
         openStandalone.style.display = "";
         openStandalone.href = panel.dataset.standalone;
       } else {
+        openStandalone.hidden = true;
         openStandalone.style.display = "none";
       }
 
       if (pushHash) {
-        history.replaceState(null, "", "#" + id);
+        const next = "#" + id;
+        if (location.hash !== next) {
+          history.replaceState(null, "", next);
+        }
       }
 
       closeMenu();
+      document.title = (panel.dataset.title || id) + " · 실전 가이드 허브";
     }
 
     navItems.forEach((btn) => {
-      btn.addEventListener("click", () => setGuide(btn.dataset.guide));
+      btn.addEventListener("click", () => setGuide(btn.dataset.guide, true));
     });
 
     function openMenu() {
@@ -952,15 +1002,23 @@
     });
     backdrop.addEventListener("click", closeMenu);
 
-    // hash routing: #icon, #texture, ...
-    const initial = (location.hash || "#icon").slice(1);
-    if (document.getElementById("panel-" + initial)) setGuide(initial, false);
-    else setGuide("icon", false);
+    function guideIdFromHash() {
+      const raw = (location.hash || "#icon").replace(/^#/, "").trim();
+      // allow #texture?x or #/texture
+      const id = raw.replace(/^\//, "").split(/[/?&]/)[0];
+      return id || "icon";
+    }
 
-    window.addEventListener("hashchange", () => {
-      const id = (location.hash || "#icon").slice(1);
+    function applyHash() {
+      const id = guideIdFromHash();
       if (document.getElementById("panel-" + id)) setGuide(id, false);
-    });
+      else setGuide("icon", false);
+    }
+
+    // hash routing: #icon, #texture, ...
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
+    window.addEventListener("pageshow", applyHash);
   </script>
 </body>
 </html>
