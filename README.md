@@ -7,33 +7,26 @@
 
 | 용도 | URL |
 |------|-----|
-| **가이드 허브** | https://ageia.github.io/icon-format-guide/ |
-| **허브 + 특정 탭** (권장 형식) | https://ageia.github.io/icon-format-guide/index.html#texture |
+| **가이드 허브** | https://ageia.github.io/icon-format-guide/index.html#icon |
 | **아이콘 포맷 단독** | https://ageia.github.io/icon-format-guide/format-guide.html |
 | **저장소** | https://github.com/Ageia/icon-format-guide |
 
-> 탭 공유 링크는 `.../index.html#이름` 형태를 권장합니다.  
-> (`.../icon-format-guide/#texture` 도 동작하지만, 예전에 캐시된 redirect용 `index`가 있으면 아이콘 단독 페이지로 튕길 수 있습니다. 그때는 **Ctrl+F5** 로 새로고침하세요.)
-
-허브 왼쪽 아래 `hub-build …` 문구가 보이면 최신 허브입니다.
+탭 공유는 `index.html#탭이름` 형식을 사용합니다.
 
 ### 탭 해시
 
-| 해시 | 가이드 | 상태 |
-|------|--------|------|
-| `#icon` | 아이콘 파일 포맷 | 완성 |
-| `#texture` | 텍스처 포맷 | 예정 |
-| `#material` | 머티리얼 블렌드 모드 | 예정 |
-| `#nanite` | Nanite vs 일반 메시 | 예정 |
-| `#import` | 텍스처 임포트 세팅 | 예정 |
-| `#lighting` | Lumen vs 베이크 | 예정 |
-| `#vfx` | VFX 텍스처·파티클 | 예정 |
-| `#collision` | 충돌 메시 | 예정 |
+| 해시 | 가이드 | 상태 | 링크 |
+|------|--------|------|------|
+| `#icon` | 아이콘 파일 포맷 | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#icon) |
+| `#texture` | 텍스처 포맷 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#texture) |
+| `#material` | 머티리얼 블렌드 모드 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#material) |
+| `#nanite` | Nanite vs 일반 메시 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#nanite) |
+| `#import` | 텍스처 임포트 세팅 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#import) |
+| `#lighting` | Lumen vs 베이크 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#lighting) |
+| `#vfx` | VFX 텍스처·파티클 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#vfx) |
+| `#collision` | 충돌 메시 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#collision) |
 
-예:
-
-- https://ageia.github.io/icon-format-guide/index.html#texture  
-- https://ageia.github.io/icon-format-guide/index.html#material  
+허브 왼쪽 아래 `hub-build …` 문구가 보이면 최신 허브입니다. 예전 페이지가 뜨면 **Ctrl+F5** 로 새로고침하세요.
 
 ## Contents
 
