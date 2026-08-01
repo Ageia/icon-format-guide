@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GPU 텍스처 압축 가이드 · 파일 포맷·압축 가이드 허브</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --bg-elevated: #171a22;
+      --bg-card: #1c2030;
+      --bg-soft: #242a3a;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text: #eef0f6;
+      --text-muted: #9aa3b8;
+      --text-dim: #6b7389;
+      --accent: #a78bfa;
+      --accent-2: #67e8f9;
+      --accent-3: #f9a8d4;
+      --mint: #6ee7b7;
+      --amber: #fbbf24;
+      --rose: #fb7185;
+      --blue: #60a5fa;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --font: "Segoe UI", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      --mono: "Cascadia Code", "Consolas", "SF Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(167, 139, 250, 0.18), transparent 55%),
+        radial-gradient(900px 500px at 90% 0%, rgba(103, 232, 249, 0.12), transparent 50%),
+        radial-gradient(800px 400px at 50% 100%, rgba(249, 168, 212, 0.08), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* Hero */
+    header.hero {
+      position: relative;
+      padding: 40px 36px;
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, rgba(167, 139, 250, 0.15), rgba(103, 232, 249, 0.06) 45%, rgba(28, 32, 48, 0.9)),
+        var(--bg-card);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 36px;
+    }
+
+    header.hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(249, 168, 212, 0.2), transparent 35%),
+        radial-gradient(circle at 15% 80%, rgba(110, 231, 183, 0.12), transparent 40%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; z-index: 1; }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .pill strong { color: var(--text); font-weight: 700; }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      margin-bottom: 14px;
+      background: linear-gradient(120deg, #fff 0%, #e9d5ff 40%, #a5f3fc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 64ch;
+      margin-bottom: 22px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 28px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .hero-meta span { display: flex; align-items: center; gap: 8px; }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 3px rgba(110, 231, 183, 0.2);
+    }
+
+    /* Nav */
+    nav.toc {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+      margin-bottom: 32px;
+      border-radius: 16px;
+      background: rgba(15, 17, 23, 0.75);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+    }
+
+    nav.toc a {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: 0.15s ease;
+    }
+
+    nav.toc a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border);
+      text-decoration: none;
+    }
+
+    /* Sections */
+    section { margin-bottom: 40px; }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 800;
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.35), rgba(103, 232, 249, 0.2));
+      border: 1px solid var(--border-strong);
+      color: #fff;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+
+    p { color: var(--text-muted); margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .card + .card { margin-top: 14px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+    @media (max-width: 820px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      header.hero { padding: 28px 22px; }
+    }
+
+    /* Comparison table */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 760px;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--bg-soft);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    td strong { color: var(--text); font-weight: 650; }
+    td code, .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: #e9d5ff;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .tag-best { background: rgba(110, 231, 183, 0.15); color: var(--mint); }
+    .tag-good { background: rgba(96, 165, 250, 0.15); color: var(--blue); }
+    .tag-ok { background: rgba(251, 191, 36, 0.15); color: var(--amber); }
+    .tag-avoid { background: rgba(251, 113, 133, 0.15); color: var(--rose); }
+    .tag-desktop { background: rgba(167, 139, 250, 0.18); color: #c4b5fd; }
+    .tag-mobile { background: rgba(103, 232, 249, 0.12); color: #a5f3fc; }
+    .tag-cross { background: rgba(110, 231, 183, 0.14); color: #6ee7b7; }
+    .tag-hdr { background: rgba(249, 168, 212, 0.16); color: #f9a8d4; }
+
+    /* Format cards */
+    .format-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .format-card:hover {
+      border-color: rgba(167, 139, 250, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .format-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+    }
+
+    .format-icon {
+      width: 52px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+      border: 1px solid var(--border-strong);
+    }
+
+    .format-head h3 { margin: 0 0 4px; font-size: 1.1rem; }
+    .format-head .sub { font-size: 12.5px; color: var(--text-dim); }
+
+    .format-body { padding: 18px 20px 20px; }
+    .format-body p { font-size: 14px; }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 8px 12px;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+
+    .kv dt { color: var(--text-dim); font-weight: 600; }
+    .kv dd { color: var(--text-muted); }
+
+    ul.checklist {
+      list-style: none;
+      margin-top: 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    ul.checklist li {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      padding-left: 22px;
+      position: relative;
+    }
+
+    ul.checklist li::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 700;
+    }
+
+    ul.checklist li.yes::before { content: "✓"; color: var(--mint); }
+    ul.checklist li.no::before { content: "✕"; color: var(--rose); }
+    ul.checklist li.maybe::before { content: "·"; color: var(--amber); font-size: 18px; line-height: 1; }
+
+    /* Decision */
+    .decision { display: grid; gap: 10px; }
+
+    .decision-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .decision-item .q { font-size: 14px; color: var(--text-muted); }
+    .decision-item .q strong { color: var(--text); }
+    .decision-item .a {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      background: rgba(167, 139, 250, 0.15);
+      color: #c4b5fd;
+      border: 1px solid rgba(167, 139, 250, 0.25);
+    }
+
+    @media (max-width: 640px) {
+      .decision-item { grid-template-columns: 1fr; }
+      .decision-item .a { justify-self: start; }
+    }
+
+    /* Callout */
+    .callout {
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      background: rgba(167, 139, 250, 0.08);
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    .callout strong { color: #e9d5ff; }
+
+    .callout.warn {
+      background: rgba(251, 191, 36, 0.08);
+      border-color: rgba(251, 191, 36, 0.2);
+    }
+
+    .callout.warn strong { color: #fde68a; }
+
+    /* Size bars */
+    .size-row {
+      display: grid;
+      grid-template-columns: 120px 1fr 96px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 12.5px;
+    }
+
+    .size-row .label { font-family: var(--mono); color: var(--text); font-weight: 600; }
+    .size-row .bytes { color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; }
+
+    .bar {
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .bar > i {
+      display: block;
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .bar > i.hot {
+      background: linear-gradient(90deg, var(--rose), var(--amber));
+    }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-dim);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="badge-row">
+          <span class="pill"><strong>파일 포맷·압축 가이드</strong></span>
+          <span class="pill">GPU 텍스처 압축</span>
+          <span class="pill">엔진 중립 · BC · ASTC · ETC2</span>
+        </div>
+        <h1>GPU 텍스처 압축<br />완전 가이드</h1>
+        <p class="lead">
+          PNG·JPG는 <strong style="color:#eef0f6">디스크에 작게 저장</strong>하는 포맷이고,
+          BC·ASTC·ETC2는 <strong style="color:#eef0f6">GPU 메모리에 올린 채로 압축을 유지</strong>하는 포맷입니다.
+          목적이 다르기 때문에 “무엇으로 압축할지”는 채널 수·알파·노멀·타깃 플랫폼으로 갈립니다.
+          이 문서는 엔진에 상관없이 통하는 블록 압축 포맷 선택 기준을 정리합니다.
+        </p>
+        <div class="hero-meta">
+          <span><i class="dot"></i>기준: 4×4 블록 압축 계열</span>
+          <span><i class="dot" style="background:var(--accent-2);box-shadow:0 0 0 3px rgba(103,232,249,.2)"></i>데스크톱 BC · 모바일 ASTC/ETC2</span>
+          <span><i class="dot" style="background:var(--accent-3);box-shadow:0 0 0 3px rgba(249,168,212,.2)"></i>bpp = bit per pixel</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="목차">
+      <a href="#overview">한눈에 보기</a>
+      <a href="#why">왜 GPU 압축</a>
+      <a href="#howblock">블록 압축 원리</a>
+      <a href="#formats">포맷 상세</a>
+      <a href="#sizes">용량·비트레이트</a>
+      <a href="#decision">선택 가이드</a>
+      <a href="#pitfalls">함정·색공간</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <!-- 1. Overview -->
+    <section id="overview">
+      <h2><span class="num">1</span> 한눈에 보기</h2>
+      <div class="legend">
+        <span class="tag tag-desktop">데스크톱(BC)</span>
+        <span class="tag tag-mobile">모바일</span>
+        <span class="tag tag-cross">크로스</span>
+        <span class="tag tag-hdr">HDR</span>
+        <span class="tag tag-best">추천</span>
+        <span class="tag tag-ok">조건부</span>
+        <span class="tag tag-avoid">레거시</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>포맷</th>
+              <th>플랫폼</th>
+              <th>비트/픽셀</th>
+              <th>채널·알파</th>
+              <th>대표 용도</th>
+              <th>평가</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>BC1</strong> <code>DXT1</code></td>
+              <td><span class="tag tag-desktop">데스크톱</span></td>
+              <td>4 bpp</td>
+              <td>RGB (+1bit 알파)</td>
+              <td>불투명 알베도, 대량 배경</td>
+              <td><span class="tag tag-best">가성비 표준</span></td>
+            </tr>
+            <tr>
+              <td><strong>BC3</strong> <code>DXT5</code></td>
+              <td><span class="tag tag-desktop">데스크톱</span></td>
+              <td>8 bpp</td>
+              <td>RGB + 부드러운 알파</td>
+              <td>알파 알베도, 구형 마스크 패킹</td>
+              <td><span class="tag tag-ok">BC7로 대체 추세</span></td>
+            </tr>
+            <tr>
+              <td><strong>BC4</strong></td>
+              <td><span class="tag tag-desktop">데스크톱</span></td>
+              <td>4 bpp</td>
+              <td>단일 채널 (R)</td>
+              <td>러프니스·높이·AO·마스크 1장</td>
+              <td><span class="tag tag-best">그레이스케일 1순위</span></td>
+            </tr>
+            <tr>
+              <td><strong>BC5</strong></td>
+              <td><span class="tag tag-desktop">데스크톱</span></td>
+              <td>8 bpp</td>
+              <td>2 채널 (RG)</td>
+              <td>탄젠트 노멀맵 (Z 재구성)</td>
+              <td><span class="tag tag-best">노멀 1순위</span></td>
+            </tr>
+            <tr>
+              <td><strong>BC6H</strong></td>
+              <td><span class="tag tag-hdr">HDR</span></td>
+              <td>8 bpp</td>
+              <td>RGB HDR (알파 없음)</td>
+              <td>스카이박스, 리플렉션, HDR 라이트</td>
+              <td><span class="tag tag-best">HDR 전용</span></td>
+            </tr>
+            <tr>
+              <td><strong>BC7</strong></td>
+              <td><span class="tag tag-desktop">데스크톱</span></td>
+              <td>8 bpp</td>
+              <td>RGB / RGBA 고품질</td>
+              <td>고품질 알베도, 알파, UI 아트</td>
+              <td><span class="tag tag-best">품질 우선</span></td>
+            </tr>
+            <tr>
+              <td><strong>ASTC</strong></td>
+              <td><span class="tag tag-mobile">모바일</span> <span class="tag tag-cross">크로스</span></td>
+              <td>0.9~8 bpp</td>
+              <td>1~4 채널 · LDR/HDR</td>
+              <td>모바일 전 범위, 블록 크기로 품질 조절</td>
+              <td><span class="tag tag-best">모바일 만능</span></td>
+            </tr>
+            <tr>
+              <td><strong>ETC2 / EAC</strong></td>
+              <td><span class="tag tag-mobile">모바일</span></td>
+              <td>4 / 8 bpp</td>
+              <td>RGB · RGBA · R/RG(EAC)</td>
+              <td>Android 기본 보장(ES 3.0)</td>
+              <td><span class="tag tag-good">호환 베이스라인</span></td>
+            </tr>
+            <tr>
+              <td><strong>PVRTC</strong></td>
+              <td><span class="tag tag-mobile">구형 iOS</span></td>
+              <td>2 / 4 bpp</td>
+              <td>RGB / RGBA</td>
+              <td>구형 PowerVR (정사각·POT 제약)</td>
+              <td><span class="tag tag-avoid">레거시</span></td>
+            </tr>
+            <tr>
+              <td><strong>RGBA8</strong> <code>무압축</code></td>
+              <td><span class="tag tag-cross">전부</span></td>
+              <td>32 bpp</td>
+              <td>RGBA 원본</td>
+              <td>작은 UI, 정밀 데이터, LUT</td>
+              <td><span class="tag tag-ok">필요할 때만</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <strong>핵심 한 줄:</strong>
+        데스크톱은 <strong>알베도 BC1/BC7 · 노멀 BC5 · 단일채널 BC4 · HDR BC6H</strong>,
+        모바일은 <strong>ASTC(품질은 블록 크기로) 또는 ETC2</strong>가 기본입니다.
+        무압축(RGBA8)은 “작지만 정밀해야 하는” 텍스처에만 예외적으로 씁니다.
+      </div>
+    </section>
+
+    <!-- 2. Why GPU compression -->
+    <section id="why">
+      <h2><span class="num">2</span> 왜 GPU 텍스처 압축인가 — PNG와 뭐가 다른가</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>PNG · JPG (전송용)</h3>
+          <p>디스크·네트워크에서 <strong style="color:#eef0f6">파일을 작게</strong> 담는 포맷입니다. GPU가 직접 읽지 못해서, 로드할 때 <strong style="color:#eef0f6">전부 RGBA로 디코드</strong>한 뒤 메모리에 올립니다.</p>
+          <ul class="checklist">
+            <li class="yes">디스크 용량·다운로드에 유리 (가변 압축)</li>
+            <li class="no">GPU 메모리에서는 결국 무압축(32bpp)로 펼쳐짐</li>
+            <li class="no">해상도가 크면 VRAM·대역폭을 그대로 다 먹음</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>BC · ASTC · ETC2 (GPU용)</h3>
+          <p>GPU가 <strong style="color:#eef0f6">압축된 상태 그대로 샘플링</strong>합니다. 블록 단위 <strong style="color:#eef0f6">고정 비트레이트</strong>라 메모리·대역폭이 예측 가능하게 줄어듭니다.</p>
+          <ul class="checklist">
+            <li class="yes">VRAM 사용량 4~8배 절감 (32bpp → 4~8bpp)</li>
+            <li class="yes">텍스처 캐시 적중률↑ → 셰이딩 대역폭 절약</li>
+            <li class="maybe">블록 손실이 있어 포맷·채널을 맞게 골라야 함</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout warn">
+        <strong>가장 흔한 오해:</strong> “PNG가 작으니 GPU에서도 작다”는 틀립니다.
+        PNG 2MB든 20MB든, 2048×2048 RGBA는 GPU에서 <strong>동일하게 약 16MB</strong>를 차지합니다.
+        진짜 절감은 <strong>BC/ASTC/ETC2로 임포트</strong>할 때 일어납니다.
+      </div>
+    </section>
+
+    <!-- 3. Block compression basics -->
+    <section id="howblock">
+      <h2><span class="num">3</span> 블록 압축 원리 (왜 포맷이 갈리나)</h2>
+      <div class="card">
+        <p>
+          BC·ETC2·ASTC는 텍스처를 <strong style="color:#eef0f6">작은 블록(보통 4×4 픽셀)</strong>으로 나누고,
+          블록마다 <strong style="color:#eef0f6">대표 색 몇 개(엔드포인트) + 픽셀별 인덱스</strong>만 저장합니다.
+          16픽셀을 몇 바이트로 눌러 담기 때문에 용량이 고정되고, 대신 블록 안에서 색 변화가 급하면 손실이 생깁니다.
+        </p>
+        <div class="grid-3" style="margin-top:16px">
+          <article class="card" style="box-shadow:none">
+            <h3>고정 비트레이트</h3>
+            <p style="font-size:13.5px">블록당 바이트 수가 정해져 있어 <strong style="color:#eef0f6">메모리가 예측 가능</strong>. 그래서 4bpp/8bpp 같은 값으로 딱 떨어짐.</p>
+          </article>
+          <article class="card" style="box-shadow:none">
+            <h3>채널이 곧 포맷</h3>
+            <p style="font-size:13.5px">노멀은 2채널(BC5), 그레이스케일은 1채널(BC4)처럼 <strong style="color:#eef0f6">필요한 채널에 비트를 몰아줄수록</strong> 품질이 좋아짐.</p>
+          </article>
+          <article class="card" style="box-shadow:none">
+            <h3>블록 크기 = 품질 손잡이</h3>
+            <p style="font-size:13.5px">ASTC는 블록을 <strong style="color:#eef0f6">4×4(큼·고품질)~12×12(작음)</strong>로 바꿔 용량/품질을 무단 조절.</p>
+          </article>
+        </div>
+        <div class="callout">
+          <strong>그래서 노멀맵은 BC5:</strong> 노멀의 X·Y만 2채널로 정밀 저장하고 Z는 셰이더에서
+          <code>z = √(1 − x² − y²)</code>로 재구성합니다. RGB로 통째 압축하면 라이팅이 울퉁불퉁해지는 이유가 이것.
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Format details -->
+    <section id="formats">
+      <h2><span class="num">4</span> 포맷별 상세 설명</h2>
+      <div class="grid-2" style="margin-top:4px">
+
+        <article class="format-card" id="fmt-bc1">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#312e81,#6366f1);color:#e0e7ff">BC1</div>
+            <div>
+              <h3>BC1 · DXT1</h3>
+              <div class="sub">4 bpp · 불투명 알베도의 가성비 표준</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              데스크톱에서 <strong style="color:#eef0f6">가장 싼 컬러 압축</strong>입니다. 4bpp로 무압축 대비 1/8.
+              알파는 1비트(있음/없음)만 가능해서, 반투명이 필요하면 BC3/BC7로 올라가야 합니다.
+            </p>
+            <dl class="kv">
+              <dt>채널</dt><dd>RGB (+선택적 1bit 알파)</dd>
+              <dt>비트레이트</dt><dd>4 bpp (1/8)</dd>
+              <dt>강점</dt><dd>용량·메모리 최소, 배경 대량 처리</dd>
+              <dt>약점</dt><dd>급한 색 경계·그라데이션 밴딩</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">불투명 디퓨즈/알베도, 원경·타일 배경</li>
+              <li class="no">반투명, 부드러운 알파 페이드</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-bc7">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#4c1d95,#a78bfa);color:#ede9fe">BC7</div>
+            <div>
+              <h3>BC7</h3>
+              <div class="sub">8 bpp · 품질 우선 알베도/알파</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              같은 8bpp인 BC3보다 <strong style="color:#eef0f6">블록 아티팩트가 훨씬 적은</strong> 고품질 RGBA 압축입니다.
+              현대 데스크톱 파이프라인에서 컬러/알파 텍스처의 <strong style="color:#eef0f6">기본값</strong>으로 많이 씁니다. (인코딩은 느린 편)
+            </p>
+            <dl class="kv">
+              <dt>채널</dt><dd>RGB 또는 RGBA</dd>
+              <dt>비트레이트</dt><dd>8 bpp (1/4)</dd>
+              <dt>강점</dt><dd>그라데이션·알파 품질, 밴딩 적음</dd>
+              <dt>약점</dt><dd>BC1의 2배 용량, 인코딩 시간</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">히어로 알베도, 반투명, UI/아이콘 아트</li>
+              <li class="yes">BC1이 밴딩 나는 부드러운 그라데이션</li>
+              <li class="maybe">대량 배경은 BC1로 내려도 충분한 경우 많음</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-bc5">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#134e4a,#2dd4bf);color:#ccfbf1">BC5</div>
+            <div>
+              <h3>BC5 · 노멀맵 전용</h3>
+              <div class="sub">8 bpp · 2채널 · Z 재구성</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              두 채널(R·G)을 각각 BC4 품질로 저장합니다. <strong style="color:#eef0f6">탄젠트 공간 노멀맵</strong>의
+              X·Y를 정밀하게 담고 Z는 셰이더에서 복원해, 라이팅이 매끈합니다.
+            </p>
+            <dl class="kv">
+              <dt>채널</dt><dd>RG (X·Y), Z는 재구성</dd>
+              <dt>비트레이트</dt><dd>8 bpp</dd>
+              <dt>색공간</dt><dd>반드시 Linear (sRGB 아님)</dd>
+              <dt>약점</dt><dd>3채널 이상 데이터엔 부적합</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">모든 탄젠트 노멀맵</li>
+              <li class="maybe">2채널 마스크(예: flow map)에도 활용</li>
+              <li class="no">컬러/알베도 (색이 빠짐)</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-bc4">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#334155,#94a3b8);color:#f1f5f9">BC4</div>
+            <div>
+              <h3>BC4 · 단일 채널</h3>
+              <div class="sub">4 bpp · 그레이스케일 1순위</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              한 채널(R)만 저장하는 4bpp 포맷입니다. <strong style="color:#eef0f6">러프니스·메탈릭·AO·하이트·마스크</strong>처럼
+              흑백 데이터 한 장을 값 손실 최소로 담을 때 최적입니다.
+            </p>
+            <dl class="kv">
+              <dt>채널</dt><dd>R (단일)</dd>
+              <dt>비트레이트</dt><dd>4 bpp</dd>
+              <dt>색공간</dt><dd>Linear (데이터)</dd>
+              <dt>팁</dt><dd>여러 마스크는 채널 패킹 후 골라 쓰기</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">러프니스·하이트·AO·단일 마스크</li>
+              <li class="no">컬러, 노멀 (채널 부족)</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-bc6h">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#831843,#f472b6);color:#fce7f3">BC6H</div>
+            <div>
+              <h3>BC6H · HDR</h3>
+              <div class="sub">8 bpp · 하이다이내믹레인지 RGB</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              <strong style="color:#eef0f6">HDR(부동소수 밝기)</strong> 컬러를 8bpp로 압축합니다.
+              스카이박스·리플렉션 프로브·HDR 라이트맵처럼 1.0을 넘는 밝기를 담아야 할 때 씁니다. 알파는 없습니다.
+            </p>
+            <dl class="kv">
+              <dt>채널</dt><dd>RGB (HDR, 알파 없음)</dd>
+              <dt>비트레이트</dt><dd>8 bpp</dd>
+              <dt>대안</dt><dd>정밀 필요 시 RGBA16F(무압축·큼)</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">스카이박스, 큐브맵, HDR 환경광</li>
+              <li class="no">일반 LDR 알베도 (BC7/BC1로)</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-astc">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6);color:#dbeafe">ASTC</div>
+            <div>
+              <h3>ASTC</h3>
+              <div class="sub">가변 bpp · 모바일 만능</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              <strong style="color:#eef0f6">블록 크기(4×4~12×12)</strong>로 용량/품질을 자유롭게 조절하는 현대 모바일 표준입니다.
+              1~4채널, LDR·HDR을 한 포맷으로 커버해 파이프라인이 단순해집니다.
+            </p>
+            <dl class="kv">
+              <dt>채널</dt><dd>1~4 · LDR/HDR</dd>
+              <dt>비트레이트</dt><dd>4×4=8bpp … 8×8=2bpp … 12×12≈0.9bpp</dd>
+              <dt>지원</dt><dd>대다수 현대 Android · Apple A8 이상</dd>
+              <dt>팁</dt><dd>알베도 6×6, 노멀 5×5 식으로 용도별 블록</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">모바일 알베도·노멀·마스크 전 범위</li>
+              <li class="yes">메모리 예산에 맞춰 블록 크기로 튜닝</li>
+              <li class="maybe">아주 구형 기기는 ETC2 폴백 준비</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-etc2">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#78350f,#f59e0b);color:#fef3c7">ETC2</div>
+            <div>
+              <h3>ETC2 / EAC</h3>
+              <div class="sub">4·8 bpp · Android 호환 베이스라인</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              OpenGL ES 3.0에서 <strong style="color:#eef0f6">지원이 보장</strong>되는 모바일 포맷입니다. ASTC 미지원 기기까지
+              커버해야 할 때의 안전한 최소 공통분모입니다. 단일/2채널은 EAC(R11/RG11)를 씁니다.
+            </p>
+            <dl class="kv">
+              <dt>채널</dt><dd>RGB(4bpp)·RGBA(8bpp)·R/RG(EAC)</dd>
+              <dt>비트레이트</dt><dd>RGB 4 bpp / RGBA 8 bpp</dd>
+              <dt>약점</dt><dd>ASTC보다 품질·유연성 낮음</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">넓은 Android 호환이 최우선일 때</li>
+              <li class="maybe">노멀은 RG(EAC)로 2채널 저장 권장</li>
+              <li class="no">HDR (BC6H/ASTC-HDR 필요)</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-rgba8">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#3f3f46,#a1a1aa);color:#fafafa">RAW</div>
+            <div>
+              <h3>RGBA8 · 무압축</h3>
+              <div class="sub">32 bpp · 정밀하지만 무거움</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              압축을 아예 안 한 원본입니다. 블록 손실이 <strong style="color:#eef0f6">치명적인 소형 텍스처</strong>에만
+              제한적으로 씁니다. 큰 텍스처에 남발하면 VRAM·대역폭을 그대로 먹습니다.
+            </p>
+            <dl class="kv">
+              <dt>채널</dt><dd>RGBA 원본</dd>
+              <dt>비트레이트</dt><dd>32 bpp</dd>
+              <dt>적합</dt><dd>작은 UI, LUT, 정밀 데이터맵</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">픽셀 퍼펙트 UI, 컬러 LUT, 소형 데이터</li>
+              <li class="no">월드 알베도·노멀 등 큰 텍스처 기본값</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 5. Sizes -->
+    <section id="sizes">
+      <h2><span class="num">5</span> 비트레이트·메모리 감각</h2>
+      <div class="card">
+        <p style="margin-bottom:16px">
+          바(bar)는 <strong style="color:#eef0f6">비트/픽셀(bpp)</strong> 기준(무압축 32bpp = 100%)이고,
+          오른쪽 용량은 <strong style="color:#eef0f6">2048×2048 한 장(밉 제외)</strong>의 GPU 메모리 근사치입니다.
+        </p>
+        <div class="size-row">
+          <span class="label">RGBA8 무압축</span>
+          <div class="bar"><i class="hot" style="width:100%"></i></div>
+          <span class="bytes">16 MB</span>
+        </div>
+        <div class="size-row">
+          <span class="label">BC7 / BC3</span>
+          <div class="bar"><i style="width:25%"></i></div>
+          <span class="bytes">4 MB</span>
+        </div>
+        <div class="size-row">
+          <span class="label">BC5 · ASTC 4×4</span>
+          <div class="bar"><i style="width:25%"></i></div>
+          <span class="bytes">4 MB</span>
+        </div>
+        <div class="size-row">
+          <span class="label">BC1 · BC4 · ETC2 RGB</span>
+          <div class="bar"><i style="width:12.5%"></i></div>
+          <span class="bytes">2 MB</span>
+        </div>
+        <div class="size-row">
+          <span class="label">ASTC 6×6</span>
+          <div class="bar"><i style="width:11%"></i></div>
+          <span class="bytes">~1.8 MB</span>
+        </div>
+        <div class="size-row">
+          <span class="label">ASTC 8×8</span>
+          <div class="bar"><i style="width:6.25%"></i></div>
+          <span class="bytes">1 MB</span>
+        </div>
+        <div class="callout warn">
+          <strong>밉맵 포함 시:</strong> 밉 체인이 붙으면 메모리는 약 <strong>+33%</strong> 늘어납니다(예: BC7 4MB → 약 5.3MB).
+          그래도 순서는 그대로라, 포맷 선택의 비교 감각으로는 위 표가 유효합니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Decision -->
+    <section id="decision">
+      <h2><span class="num">6</span> 뭐 쓰지? 빠른 선택 가이드</h2>
+      <div class="decision">
+        <div class="decision-item">
+          <div class="q"><strong>불투명 알베도</strong> — 배경·타일, 알파 불필요</div>
+          <div class="a">BC1 · ASTC 6×6</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>고품질/알파 알베도</strong> — 히어로, 부드러운 페이드</div>
+          <div class="a">BC7 · ASTC 4×4</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>탄젠트 노멀맵</strong></div>
+          <div class="a">BC5 · ASTC(모바일)</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>러프니스·AO·하이트</strong> — 단일 채널</div>
+          <div class="a">BC4 · EAC R11</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>HDR 스카이박스·리플렉션</strong></div>
+          <div class="a">BC6H · ASTC-HDR</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>모바일 타깃 전반</strong></div>
+          <div class="a">ASTC (→ ETC2 폴백)</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>픽셀 퍼펙트 UI · LUT · 소형 데이터</strong></div>
+          <div class="a">RGBA8 무압축</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>구형 iOS/PowerVR 단독 지원</strong></div>
+          <div class="a" style="background:rgba(251,113,133,.12);color:#fda4af;border-color:rgba(251,113,133,.25)">PVRTC (레거시)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Pitfalls -->
+    <section id="pitfalls">
+      <h2><span class="num">7</span> 흔한 함정 · 색공간</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>sRGB vs Linear를 틀리면</h3>
+          <p>
+            컬러/알베도는 <strong style="color:#eef0f6">sRGB</strong>로, 노멀·러프니스·마스크 같은
+            <strong style="color:#eef0f6">데이터는 Linear</strong>로 다뤄야 합니다. 데이터맵을 sRGB로 잘못 읽으면
+            값이 감마 곡선으로 휘어 라이팅이 어긋납니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>노멀을 컬러 압축으로</h3>
+          <p>
+            노멀맵을 BC1/BC7 같은 RGB 압축에 넣으면 표면이 울퉁불퉁해집니다.
+            <strong style="color:#eef0f6">BC5(2채널) + Z 재구성</strong>이 정답입니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>손실 소스를 재압축</h3>
+          <p>
+            JPG처럼 이미 손실이 낀 소스를 블록 압축하면 아티팩트가 겹칩니다.
+            소스는 <strong style="color:#eef0f6">PNG/TGA 등 무손실</strong>을 임포트해 엔진이 한 번만 압축하게 하세요.
+          </p>
+        </article>
+        <article class="card">
+          <h3>밉맵·알파 커버리지</h3>
+          <p>
+            컷아웃 알파(잎·철망)는 밉을 내려갈수록 얇아져 사라질 수 있습니다.
+            <strong style="color:#eef0f6">알파 커버리지 보존</strong> 옵션을 켜고, 알파는 BC1 1비트보다 BC7/BC3을 검토하세요.
+          </p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>파이프라인 원칙:</strong> 무손실 소스 보관 → 엔진 임포트에서 용도별 압축 지정(알베도/노멀/데이터 구분) →
+        타깃 플랫폼별 포맷 분기(BC↔ASTC/ETC2). 소스에 미리 BC를 구워 넣지 마세요.
+      </div>
+    </section>
+
+    <!-- 8. FAQ -->
+    <section id="faq">
+      <h2><span class="num">8</span> FAQ · 헷갈리기 쉬운 점</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Q. PNG로 임포트하면 GPU에서도 PNG인가요?</h3>
+          <p>
+            아닙니다. PNG는 임포트 시 디코드되고, 엔진 설정에 따라 <strong style="color:#eef0f6">BC/ASTC로 재압축</strong>되거나
+            무압축 RGBA로 올라갑니다. GPU 메모리를 정하는 건 “임포트 압축 설정”이지 원본 확장자가 아닙니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. BC7이 항상 BC1보다 좋나요?</h3>
+          <p>
+            품질은 그렇지만 <strong style="color:#eef0f6">용량은 2배</strong>입니다. 배경·원경처럼 눈에 덜 띄는 텍스처는
+            BC1으로 내려 메모리를 아끼고, 눈에 띄는 표면만 BC7을 쓰는 식이 실무적입니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 모바일인데 BC를 쓸 수 있나요?</h3>
+          <p>
+            대부분 못 씁니다. 모바일 GPU는 <strong style="color:#eef0f6">ASTC/ETC2(PVRTC)</strong> 계열을 지원합니다.
+            멀티플랫폼이면 플랫폼별로 다른 포맷을 굽도록 파이프라인을 분기하세요.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. ASTC 블록 크기는 어떻게 고르나요?</h3>
+          <p>
+            작은 블록(4×4)일수록 고품질·고용량입니다. <strong style="color:#eef0f6">중요한 표면은 4×4~5×5</strong>,
+            배경·마스크는 6×6~8×8로 내려 메모리를 조절합니다. 노멀은 너무 큰 블록을 피하세요.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 채널 패킹이랑 압축은 같이 가나요?</h3>
+          <p>
+            네. AO·러프니스·메탈릭을 한 장에 패킹한 뒤 그 텍스처를 BC7/ASTC로 압축하는 식입니다.
+            자세한 건 허브의 <strong style="color:#eef0f6">채널 패킹</strong> 가이드에서 다룹니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 무압축이 화질은 제일 좋으니 많이 쓰면?</h3>
+          <p>
+            화질은 최고지만 <strong style="color:#eef0f6">메모리·대역폭 비용이 4~8배</strong>라 큰 텍스처엔 금물입니다.
+            UI·LUT·정밀 데이터 등 “작지만 정확해야” 하는 곳에만 예외로 씁니다.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 9. Cheatsheet -->
+    <section>
+      <h2><span class="num">9</span> 실무 치트시트</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>텍스처 종류</th>
+              <th>데스크톱</th>
+              <th>모바일</th>
+              <th>피하기</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>불투명 알베도 (배경·타일)</td>
+              <td><strong>BC1</strong></td>
+              <td><strong>ASTC 6×6</strong> / ETC2 RGB</td>
+              <td>무압축</td>
+            </tr>
+            <tr>
+              <td>고품질·반투명 알베도</td>
+              <td><strong>BC7</strong></td>
+              <td><strong>ASTC 4×4</strong> / ETC2 RGBA</td>
+              <td>BC1(알파)</td>
+            </tr>
+            <tr>
+              <td>탄젠트 노멀맵</td>
+              <td><strong>BC5</strong></td>
+              <td><strong>ASTC</strong> / EAC RG</td>
+              <td>BC1·BC7(RGB 노멀)</td>
+            </tr>
+            <tr>
+              <td>러프니스·AO·하이트 (1채널)</td>
+              <td><strong>BC4</strong></td>
+              <td><strong>EAC R11</strong> / ASTC</td>
+              <td>3채널 압축에 낭비</td>
+            </tr>
+            <tr>
+              <td>HDR 스카이·리플렉션</td>
+              <td><strong>BC6H</strong></td>
+              <td>ASTC-HDR</td>
+              <td>LDR 압축</td>
+            </tr>
+            <tr>
+              <td>픽셀 퍼펙트 UI · LUT</td>
+              <td colspan="2"><strong>RGBA8 무압축</strong> (소형 한정)</td>
+              <td>BC/ASTC 손실</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div>
+        <strong style="color:var(--text-muted)">GPU 텍스처 압축 가이드</strong>
+        · <a href="index.html#texture" style="color:var(--text-muted)">허브로 돌아가기</a>
+      </div>
+      <div>수치는 4×4 블록·2K 텍스처 기준 근사치입니다. 실제 값은 엔진 임포트 설정에서 확인하세요.</div>
+    </footer>
+  </div>
+</body>
+</html>

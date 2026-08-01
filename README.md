@@ -21,7 +21,7 @@
 |------|--------|------|------|
 | `#icon` | 아이콘 파일 포맷 | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#icon) |
 | `#raster` | 래스터 이미지 포맷 (WebP 품질별 압축 비교) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#raster) |
-| `#texture` | GPU 텍스처 압축 (BC·ASTC·ETC2) | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#texture) |
+| `#texture` | GPU 텍스처 압축 (BC·ASTC·ETC2) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#texture) |
 | `#channel` | 채널 패킹 (ORM·노멀·sRGB) | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#channel) |
 | `#container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#container) |
 
@@ -31,6 +31,7 @@
 
 - `index.html` — 허브 (사이드바 탭 + 가이드 패널)
 - `format-guide.html` — 아이콘 포맷 완성 가이드 (단독 문서)
+- `texture-compression-guide.html` — GPU 텍스처 압축 완성 가이드 (BC·ASTC·ETC2)
 - `webp-compare/` — WebP 품질별 압축 비교 툴 + 생성된 WebP 14단계 (`generate.py`로 재생성)
 - `AGENTS.md` — 새 세션·AI용 프로젝트 규칙/맥락
 - `docs/TODO.md` — 하고 싶은 일 백로그 (Now / Next / Later)

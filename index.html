@@ -562,16 +562,16 @@
           <span class="badge badge-live">완성</span>
         </button>
 
-        <div class="nav-group">포맷 · 압축 (작성 예정)</div>
-
         <button type="button" class="nav-item" data-guide="texture">
           <span class="nav-icon">TEX</span>
           <span class="nav-text">
             <strong>GPU 텍스처 압축</strong>
             <span>BC · ASTC · ETC2 · PVRTC</span>
           </span>
-          <span class="badge badge-soon">예정</span>
+          <span class="badge badge-live">완성</span>
         </button>
+
+        <div class="nav-group">포맷 · 압축 (작성 예정)</div>
 
         <button type="button" class="nav-item" data-guide="channel">
           <span class="nav-icon">CH</span>
@@ -625,10 +625,12 @@
           <iframe class="panel-frame" id="rasterFrame" data-src="webp-compare/compression_comparison.html" title="WebP 품질별 압축 비교" loading="lazy"></iframe>
         </section>
 
-        <!-- Placeholder guides -->
-        <section class="panel" id="panel-texture" data-title="GPU 텍스처 압축" data-sub="작성 예정 · 목차와 선택 뼈대">
-          <div class="panel-scroll"><div class="panel-inner" data-stub="texture"></div></div>
+        <!-- Live: GPU texture compression guide via iframe -->
+        <section class="panel" id="panel-texture" data-title="GPU 텍스처 압축" data-sub="완성 가이드 · BC · ASTC · ETC2 선택" data-standalone="texture-compression-guide.html">
+          <iframe class="panel-frame" id="textureFrame" data-src="texture-compression-guide.html" title="GPU 텍스처 압축 가이드" loading="lazy"></iframe>
         </section>
+
+        <!-- Placeholder guides -->
         <section class="panel" id="panel-channel" data-title="채널 패킹" data-sub="작성 예정 · 목차와 선택 뼈대">
           <div class="panel-scroll"><div class="panel-inner" data-stub="channel"></div></div>
         </section>
@@ -641,38 +643,6 @@
 
   <script>
     const GUIDES = {
-      texture: {
-        pills: ["GPU 압축", "블록 압축", "모바일·콘솔"],
-        title: "GPU 텍스처 압축 실전 가이드",
-        lead: "소스 PNG와 GPU에 올라가는 BC/ASTC/ETC 결과물은 다릅니다. 채널 수·알파·노멀·대역폭을 기준으로 “무엇으로 압축할지”를 고르는 치트시트입니다.",
-        toc: ["한눈에 표", "BC1~7 언제", "ASTC", "ETC2·PVRTC", "용량 vs 품질", "FAQ"],
-        cards: [
-          {
-            h: "다룰 핵심",
-            items: [
-              "Albedo: BC1 vs BC7 vs ASTC",
-              "Normal: BC5, 재구성 트릭",
-              "블록 크기 ↔ 비트레이트",
-              "데스크톱(BC) vs 모바일(ASTC/ETC)"
-            ]
-          },
-          {
-            h: "목표 독자",
-            items: [
-              "그래픽 프로그래머 / TA",
-              "모바일 최적화 담당",
-              "텍스처 압축을 자주 고르는 사람"
-            ]
-          }
-        ],
-        decisions: [
-          ["불투명 알베도, 알파 없음", "BC1 / ASTC 4x4"],
-          ["부드러운 그라데이션·고품질", "BC7 또는 고품질 ASTC"],
-          ["노멀 맵", "BC5 (2채널)"],
-          ["모바일 타깃", "ASTC / ETC2"]
-        ],
-        note: "완성본에서는 아이콘 가이드처럼 비교표·용량 감각·아티팩트 예시를 넣을 예정입니다."
-      },
       channel: {
         pills: ["ORM 패킹", "sRGB vs Linear", "노멀"],
         title: "채널 패킹 실전 가이드",
