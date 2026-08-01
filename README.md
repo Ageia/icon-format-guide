@@ -1,6 +1,6 @@
-# icon-format-guide
+# format-guide
 
-게임 · 언리얼 · TA를 위한 **실전 가이드 허브**입니다.  
+**파일 포맷과 텍스처 압축 기법**을 “언제 뭘 쓸지” 고르는 실전 가이드 허브입니다.
 한국어 기준이며, 한/영 토글은 추후 지원 예정입니다.
 
 ## Preview
@@ -11,6 +11,8 @@
 | **아이콘 포맷 단독** | https://ageia.github.io/icon-format-guide/format-guide.html |
 | **저장소** | https://github.com/Ageia/icon-format-guide |
 
+> 참고: 저장소·Pages 경로는 아직 `icon-format-guide`입니다. (리네임은 백로그)
+
 탭 공유는 `index.html#탭이름` 형식을 사용합니다.
 
 ### 탭 해시
@@ -18,13 +20,10 @@
 | 해시 | 가이드 | 상태 | 링크 |
 |------|--------|------|------|
 | `#icon` | 아이콘 파일 포맷 | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#icon) |
-| `#texture` | 텍스처 포맷 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#texture) |
-| `#material` | 머티리얼 블렌드 모드 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#material) |
-| `#nanite` | Nanite vs 일반 메시 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#nanite) |
-| `#import` | 텍스처 임포트 세팅 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#import) |
-| `#lighting` | Lumen vs 베이크 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#lighting) |
-| `#vfx` | VFX 텍스처·파티클 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#vfx) |
-| `#collision` | 충돌 메시 | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#collision) |
+| `#raster` | 래스터 이미지 포맷 (WebP 품질별 압축 비교) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#raster) |
+| `#texture` | GPU 텍스처 압축 (BC·ASTC·ETC2) | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#texture) |
+| `#channel` | 채널 패킹 (ORM·노멀·sRGB) | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#channel) |
+| `#container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | 예정 | [열기](https://ageia.github.io/icon-format-guide/index.html#container) |
 
 허브 왼쪽 아래 `hub-build …` 문구가 보이면 최신 허브입니다. 예전 페이지가 뜨면 **Ctrl+F5** 로 새로고침하세요.
 
@@ -32,13 +31,14 @@
 
 - `index.html` — 허브 (사이드바 탭 + 가이드 패널)
 - `format-guide.html` — 아이콘 포맷 완성 가이드 (단독 문서)
+- `webp-compare/` — WebP 품질별 압축 비교 툴 + 생성된 WebP 14단계 (`generate.py`로 재생성)
 - `AGENTS.md` — 새 세션·AI용 프로젝트 규칙/맥락
 - `docs/TODO.md` — 하고 싶은 일 백로그 (Now / Next / Later)
-- `badge_cloud.*` / `badge_star.*` — 멀티 포맷 아이콘 샘플
+- `badge_cloud.*` / `badge_star.*` — 멀티 포맷 샘플 에셋 (WebP 비교 소스로도 사용)
 
 ## For next session / AI
 
-새 대화에서 이어서 작업할 때는 repo를 연 뒤  
+새 대화에서 이어서 작업할 때는 repo를 연 뒤
 **`AGENTS.md` → `docs/TODO.md` → `README.md` → `git log`** 순으로 읽으면 됩니다.
 
 아이디어 추가: `docs/TODO.md` 해당 섹션에 `- [ ] …` 한 줄 넣고 커밋.
