@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>채널 패킹 가이드 · 파일 포맷·압축 가이드 허브</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --bg-elevated: #171a22;
+      --bg-card: #1c2030;
+      --bg-soft: #242a3a;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text: #eef0f6;
+      --text-muted: #9aa3b8;
+      --text-dim: #6b7389;
+      --accent: #a78bfa;
+      --accent-2: #67e8f9;
+      --accent-3: #f9a8d4;
+      --mint: #6ee7b7;
+      --amber: #fbbf24;
+      --rose: #fb7185;
+      --blue: #60a5fa;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --font: "Segoe UI", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      --mono: "Cascadia Code", "Consolas", "SF Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(167, 139, 250, 0.18), transparent 55%),
+        radial-gradient(900px 500px at 90% 0%, rgba(103, 232, 249, 0.12), transparent 50%),
+        radial-gradient(800px 400px at 50% 100%, rgba(249, 168, 212, 0.08), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* Hero */
+    header.hero {
+      position: relative;
+      padding: 40px 36px;
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, rgba(167, 139, 250, 0.15), rgba(103, 232, 249, 0.06) 45%, rgba(28, 32, 48, 0.9)),
+        var(--bg-card);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 36px;
+    }
+
+    header.hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(249, 168, 212, 0.2), transparent 35%),
+        radial-gradient(circle at 15% 80%, rgba(110, 231, 183, 0.12), transparent 40%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; z-index: 1; }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .pill strong { color: var(--text); font-weight: 700; }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      margin-bottom: 14px;
+      background: linear-gradient(120deg, #fff 0%, #e9d5ff 40%, #a5f3fc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 64ch;
+      margin-bottom: 22px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 28px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .hero-meta span { display: flex; align-items: center; gap: 8px; }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 3px rgba(110, 231, 183, 0.2);
+    }
+
+    /* Nav */
+    nav.toc {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+      margin-bottom: 32px;
+      border-radius: 16px;
+      background: rgba(15, 17, 23, 0.75);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+    }
+
+    nav.toc a {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: 0.15s ease;
+    }
+
+    nav.toc a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border);
+      text-decoration: none;
+    }
+
+    /* Sections */
+    section { margin-bottom: 40px; }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 800;
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.35), rgba(103, 232, 249, 0.2));
+      border: 1px solid var(--border-strong);
+      color: #fff;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+
+    p { color: var(--text-muted); margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .card + .card { margin-top: 14px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+    @media (max-width: 820px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      header.hero { padding: 28px 22px; }
+    }
+
+    /* Comparison table */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 720px;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--bg-soft);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    td strong { color: var(--text); font-weight: 650; }
+    td code, .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: #e9d5ff;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .tag-best { background: rgba(110, 231, 183, 0.15); color: var(--mint); }
+    .tag-good { background: rgba(96, 165, 250, 0.15); color: var(--blue); }
+    .tag-ok { background: rgba(251, 191, 36, 0.15); color: var(--amber); }
+    .tag-avoid { background: rgba(251, 113, 133, 0.15); color: var(--rose); }
+
+    /* Channel tags (R/G/B/A) */
+    .ch {
+      display: inline-block;
+      min-width: 20px;
+      text-align: center;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .ch-r { background: rgba(251, 113, 133, 0.16); color: #fda4af; border: 1px solid rgba(251,113,133,.28); }
+    .ch-g { background: rgba(110, 231, 183, 0.16); color: #6ee7b7; border: 1px solid rgba(110,231,183,.28); }
+    .ch-b { background: rgba(96, 165, 250, 0.16); color: #93c5fd; border: 1px solid rgba(96,165,250,.28); }
+    .ch-a { background: rgba(148, 163, 184, 0.16); color: #cbd5e1; border: 1px solid rgba(148,163,184,.28); }
+
+    /* Channel strip visual */
+    .chan-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .chan-cell {
+      border-radius: 10px;
+      padding: 12px 12px 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+    }
+
+    .chan-cell .slot {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 800;
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .chan-cell.r .slot { background: rgba(251,113,133,.18); color: #fda4af; }
+    .chan-cell.g .slot { background: rgba(110,231,183,.18); color: #6ee7b7; }
+    .chan-cell.b .slot { background: rgba(96,165,250,.18); color: #93c5fd; }
+    .chan-cell.a .slot { background: rgba(148,163,184,.18); color: #cbd5e1; }
+
+    .chan-cell .what { font-size: 13px; color: var(--text); font-weight: 650; }
+    .chan-cell .note { font-size: 11.5px; color: var(--text-dim); margin-top: 3px; }
+
+    @media (max-width: 640px) {
+      .chan-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Recipe cards */
+    .format-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .format-card:hover {
+      border-color: rgba(167, 139, 250, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .format-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+    }
+
+    .format-icon {
+      width: 52px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+      border: 1px solid var(--border-strong);
+    }
+
+    .format-head h3 { margin: 0 0 4px; font-size: 1.1rem; }
+    .format-head .sub { font-size: 12.5px; color: var(--text-dim); }
+
+    .format-body { padding: 18px 20px 20px; }
+    .format-body p { font-size: 14px; }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 8px 12px;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+
+    .kv dt { color: var(--text-dim); font-weight: 600; }
+    .kv dd { color: var(--text-muted); }
+
+    ul.checklist {
+      list-style: none;
+      margin-top: 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    ul.checklist li {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      padding-left: 22px;
+      position: relative;
+    }
+
+    ul.checklist li::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 700;
+    }
+
+    ul.checklist li.yes::before { content: "✓"; color: var(--mint); }
+    ul.checklist li.no::before { content: "✕"; color: var(--rose); }
+    ul.checklist li.maybe::before { content: "·"; color: var(--amber); font-size: 18px; line-height: 1; }
+
+    /* Decision */
+    .decision { display: grid; gap: 10px; }
+
+    .decision-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .decision-item .q { font-size: 14px; color: var(--text-muted); }
+    .decision-item .q strong { color: var(--text); }
+    .decision-item .a {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      background: rgba(167, 139, 250, 0.15);
+      color: #c4b5fd;
+      border: 1px solid rgba(167, 139, 250, 0.25);
+    }
+
+    @media (max-width: 640px) {
+      .decision-item { grid-template-columns: 1fr; }
+      .decision-item .a { justify-self: start; }
+    }
+
+    /* Callout */
+    .callout {
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      background: rgba(167, 139, 250, 0.08);
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    .callout strong { color: #e9d5ff; }
+
+    .callout.warn {
+      background: rgba(251, 191, 36, 0.08);
+      border-color: rgba(251, 191, 36, 0.2);
+    }
+
+    .callout.warn strong { color: #fde68a; }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-dim);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="badge-row">
+          <span class="pill"><strong>파일 포맷·압축 가이드</strong></span>
+          <span class="pill">채널 패킹</span>
+          <span class="pill">ORM · 노멀 · sRGB vs Linear</span>
+        </div>
+        <h1>채널 패킹<br />완전 가이드</h1>
+        <p class="lead">
+          러프니스·메탈릭·AO 같은 <strong style="color:#eef0f6">흑백 데이터 여러 장</strong>을 한 텍스처의
+          R·G·B·A 채널에 몰아넣으면, 텍스처 페치와 메모리를 크게 아낄 수 있습니다.
+          이 문서는 어떤 데이터를 어느 채널에, 어떤 색공간으로, 어떤 압축과 함께 담을지를
+          엔진에 상관없이 통하는 기준으로 정리합니다.
+        </p>
+        <div class="hero-meta">
+          <span><i class="dot"></i>기준: RGBA 4채널 마스크 패킹</span>
+          <span><i class="dot" style="background:var(--accent-2);box-shadow:0 0 0 3px rgba(103,232,249,.2)"></i>데이터 채널 = Linear</span>
+          <span><i class="dot" style="background:var(--accent-3);box-shadow:0 0 0 3px rgba(249,168,212,.2)"></i>압축과 함께 설계</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="목차">
+      <a href="#overview">한눈에 보기</a>
+      <a href="#why">왜 패킹하나</a>
+      <a href="#howto">채널 배치 원리</a>
+      <a href="#recipes">대표 레시피</a>
+      <a href="#color">sRGB vs Linear</a>
+      <a href="#compression">압축과의 상호작용</a>
+      <a href="#decision">선택 가이드</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <!-- 1. Overview -->
+    <section id="overview">
+      <h2><span class="num">1</span> 한눈에 보기 — 대표 패킹 관례</h2>
+      <div class="legend">
+        <span class="ch ch-r">R</span>
+        <span class="ch ch-g">G</span>
+        <span class="ch ch-b">B</span>
+        <span class="ch ch-a">A</span>
+        <span style="color:var(--text-dim);font-size:12px">= 각 채널에 담기는 데이터</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>패킹 이름</th>
+              <th>R</th>
+              <th>G</th>
+              <th>B</th>
+              <th>A</th>
+              <th>색공간</th>
+              <th>비고</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>ORM</strong> (마스크맵)</td>
+              <td><span class="ch ch-r">AO</span></td>
+              <td><span class="ch ch-g">Rough</span></td>
+              <td><span class="ch ch-b">Metal</span></td>
+              <td>—</td>
+              <td>Linear</td>
+              <td>PBR 표준, 널리 쓰임</td>
+            </tr>
+            <tr>
+              <td><strong>glTF</strong> metallic-roughness</td>
+              <td><span class="ch ch-r">(AO)</span></td>
+              <td><span class="ch ch-g">Rough</span></td>
+              <td><span class="ch ch-b">Metal</span></td>
+              <td>—</td>
+              <td>Linear</td>
+              <td>G=Rough, B=Metal 고정. AO는 별도 텍스처가 원칙</td>
+            </tr>
+            <tr>
+              <td><strong>RMA</strong> 변형</td>
+              <td><span class="ch ch-r">Rough</span></td>
+              <td><span class="ch ch-g">Metal</span></td>
+              <td><span class="ch ch-b">AO</span></td>
+              <td>—</td>
+              <td>Linear</td>
+              <td>순서는 프로젝트마다 다름 — 문서화 필수</td>
+            </tr>
+            <tr>
+              <td><strong>알베도+알파</strong></td>
+              <td colspan="3"><span class="ch ch-r">R</span> <span class="ch ch-g">G</span> <span class="ch ch-b">B</span> 색상</td>
+              <td><span class="ch ch-a">Opacity/Mask</span></td>
+              <td>RGB=sRGB · A=Linear</td>
+              <td>컬러와 마스크는 색공간이 다름</td>
+            </tr>
+            <tr>
+              <td><strong>노멀+데이터</strong></td>
+              <td><span class="ch ch-r">Nx</span></td>
+              <td><span class="ch ch-g">Ny</span></td>
+              <td><span class="ch ch-b">(Rough)</span></td>
+              <td><span class="ch ch-a">(Height)</span></td>
+              <td>Linear</td>
+              <td>BC5는 2채널뿐 — 3·4채널 패킹은 BC7/ASTC</td>
+            </tr>
+            <tr>
+              <td><strong>범용 마스크</strong></td>
+              <td><span class="ch ch-r">Mask1</span></td>
+              <td><span class="ch ch-g">Mask2</span></td>
+              <td><span class="ch ch-b">Mask3</span></td>
+              <td><span class="ch ch-a">Mask4</span></td>
+              <td>Linear</td>
+              <td>블렌드/디졸브/이미시브 세기 등</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warn">
+        <strong>채널 순서에 “표준”은 없습니다.</strong> ORM이 흔하지만 엔진·프로젝트마다 R/G/B 배치가 다릅니다.
+        팀 컨벤션을 <strong>한 곳에 문서화</strong>하고 셰이더·임포트 설정과 일치시키는 게 핵심입니다.
+      </div>
+    </section>
+
+    <!-- 2. Why -->
+    <section id="why">
+      <h2><span class="num">2</span> 왜 채널에 몰아넣나</h2>
+      <div class="grid-3">
+        <article class="card">
+          <h3>텍스처 페치 절감</h3>
+          <p style="font-size:13.5px">AO·러프·메탈을 3장 따로 샘플하면 <strong style="color:#eef0f6">페치 3번</strong>. 한 장에 패킹하면 <strong style="color:#eef0f6">1번</strong>이면 됩니다. 셰이더 대역폭·명령이 줄어듭니다.</p>
+        </article>
+        <article class="card">
+          <h3>메모리·에셋 수 절감</h3>
+          <p style="font-size:13.5px">흑백 3장(각 1채널)을 따로 두면 채널이 낭비됩니다. 한 RGB 텍스처로 합치면 <strong style="color:#eef0f6">메모리·파일 수·바인딩 슬롯</strong>이 줄어듭니다.</p>
+        </article>
+        <article class="card">
+          <h3>일관된 관리</h3>
+          <p style="font-size:13.5px">“이 표면의 서피스 데이터”가 한 파일에 모여 <strong style="color:#eef0f6">버전·해상도·압축</strong>을 한 번에 맞추기 쉽습니다.</p>
+        </article>
+      </div>
+      <div class="callout">
+        <strong>핵심:</strong> 채널 패킹은 “<em>색을 예쁘게</em>”가 아니라 “<em>흑백 데이터 여러 장을 한 번에 읽으려는</em>” 최적화입니다.
+        그래서 담기는 값은 대부분 <strong>컬러가 아닌 데이터</strong>이고, 색공간은 Linear가 기본입니다.
+      </div>
+    </section>
+
+    <!-- 3. How to -->
+    <section id="howto">
+      <h2><span class="num">3</span> 채널 배치 원리</h2>
+      <div class="card">
+        <p>
+          RGBA 텍스처는 채널 4개가 각각 <strong style="color:#eef0f6">독립된 흑백 이미지</strong>입니다.
+          한 채널에 흑백 데이터 한 장씩 넣고, 셰이더에서 <code>tex.g</code>, <code>tex.b</code>처럼 꺼내 씁니다.
+          아래는 전형적인 마스크맵(ORM) 배치 예시입니다.
+        </p>
+        <div class="chan-strip">
+          <div class="chan-cell r">
+            <span class="slot">R 채널</span>
+            <div class="what">Ambient Occlusion</div>
+            <div class="note">그림자 가려짐 정도</div>
+          </div>
+          <div class="chan-cell g">
+            <span class="slot">G 채널</span>
+            <div class="what">Roughness</div>
+            <div class="note">거칠기 (0 매끈~1 거침)</div>
+          </div>
+          <div class="chan-cell b">
+            <span class="slot">B 채널</span>
+            <div class="what">Metallic</div>
+            <div class="note">금속 여부 (0/1 위주)</div>
+          </div>
+          <div class="chan-cell a">
+            <span class="slot">A 채널</span>
+            <div class="what">여유 / Height</div>
+            <div class="note">알파는 별도 블록이라 신중히</div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>배치 우선순위 팁:</strong> 눈에 가장 민감한 데이터(예: 러프니스)를
+          <strong>압축 손상이 적은 채널</strong>에 두는 게 좋습니다. 자세한 건 아래 “압축과의 상호작용” 참고.
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Recipes -->
+    <section id="recipes">
+      <h2><span class="num">4</span> 대표 패킹 레시피</h2>
+      <div class="grid-2" style="margin-top:4px">
+
+        <article class="format-card">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#134e4a,#2dd4bf);color:#ccfbf1">ORM</div>
+            <div>
+              <h3>ORM 마스크맵</h3>
+              <div class="sub">AO · Roughness · Metallic 한 장</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>가장 흔한 PBR 서피스 패킹. 세 흑백 데이터를 RGB에 담아 한 번에 읽습니다.</p>
+            <dl class="kv">
+              <dt>R</dt><dd>Ambient Occlusion</dd>
+              <dt>G</dt><dd>Roughness</dd>
+              <dt>B</dt><dd>Metallic</dd>
+              <dt>색공간</dt><dd>Linear (데이터)</dd>
+              <dt>압축</dt><dd>BC7 / ASTC (BC1은 밴딩 위험)</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">대부분의 불투명 PBR 표면</li>
+              <li class="maybe">엔진 관례에 맞춰 순서 조정</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#4c1d95,#a78bfa);color:#ede9fe">A+α</div>
+            <div>
+              <h3>알베도 + 알파</h3>
+              <div class="sub">색상 RGB + 오파시티/마스크 A</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>컬러와 마스크를 한 장에. 단, <strong style="color:#eef0f6">색공간이 채널마다 다르다</strong>는 점이 함정입니다.</p>
+            <dl class="kv">
+              <dt>R·G·B</dt><dd>알베도 색상 (sRGB)</dd>
+              <dt>A</dt><dd>Opacity 또는 컷아웃 마스크 (Linear)</dd>
+              <dt>압축</dt><dd>BC7 / BC3 / ASTC (알파 지원)</dd>
+              <dt>주의</dt><dd>BC1 1비트 알파는 부드러운 페이드 불가</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">반투명·컷아웃 알베도</li>
+              <li class="no">BC1로 부드러운 알파 (계단짐)</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#1e3a5f,#3b82f6);color:#dbeafe">N+D</div>
+            <div>
+              <h3>노멀 + 데이터</h3>
+              <div class="sub">Nx·Ny + 러프/하이트</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>노멀 X·Y를 RG에 두고 남는 B·A에 러프니스·하이트를 얹는 패킹. 페치를 더 줄입니다.</p>
+            <dl class="kv">
+              <dt>R·G</dt><dd>노멀 X·Y (Z는 재구성)</dd>
+              <dt>B</dt><dd>Roughness 등</dd>
+              <dt>A</dt><dd>Height / AO</dd>
+              <dt>압축</dt><dd>BC7 / ASTC (BC5는 2채널뿐이라 불가)</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">페치 예산이 빡빡한 모바일/콘솔</li>
+              <li class="maybe">노멀 품질은 BC5 분리보다 살짝 낮을 수 있음</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#78350f,#f59e0b);color:#fef3c7">MASK</div>
+            <div>
+              <h3>범용 마스크 4장</h3>
+              <div class="sub">블렌드·디졸브·이미시브 등</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>서로 무관한 흑백 마스크 최대 4장을 RGBA에 담습니다. 커스텀 셰이더에서 자유롭게 활용.</p>
+            <dl class="kv">
+              <dt>R~A</dt><dd>Mask1~4 (독립 데이터)</dd>
+              <dt>색공간</dt><dd>Linear</dd>
+              <dt>압축</dt><dd>중요 마스크는 BC7/ASTC, 단일은 BC4 분리도 검토</dd>
+              <dt>주의</dt><dd>무관한 채널일수록 RGB 공동 압축에 약함</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">머티리얼 블렌드·이펙트 제어</li>
+              <li class="no">품질 민감 데이터를 저품질 채널에 방치</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 5. Color space -->
+    <section id="color">
+      <h2><span class="num">5</span> sRGB vs Linear — 가장 많이 틀리는 부분</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>컬러 = sRGB</h3>
+          <p>눈으로 보는 <strong style="color:#eef0f6">색상(알베도·이미시브 컬러)</strong>은 sRGB로 저장·해석합니다. 감마가 적용된 “보기 좋은” 값입니다.</p>
+          <ul class="checklist">
+            <li class="yes">알베도/베이스컬러 RGB</li>
+            <li class="yes">이미시브 컬러</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>데이터 = Linear</h3>
+          <p>러프니스·메탈릭·AO·노멀·하이트·마스크는 <strong style="color:#eef0f6">숫자(데이터)</strong>라 Linear로 다뤄야 합니다. sRGB로 잘못 읽으면 값이 감마 곡선으로 휘어 라이팅이 어긋납니다.</p>
+          <ul class="checklist">
+            <li class="yes">ORM/마스크/노멀 모든 채널</li>
+            <li class="no">데이터 텍스처에 sRGB 플래그 켜기</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout warn">
+        <strong>패킹의 함정:</strong> 알베도(sRGB)와 마스크(Linear)를 <em>한 텍스처</em>에 섞으면 색공간이 충돌합니다.
+        보통 <strong>알베도는 sRGB 텍스처, 마스크맵은 별도 Linear 텍스처</strong>로 나눕니다.
+        같은 파일의 알파에 마스크를 넣는 경우, 엔진이 RGB만 sRGB로 처리하는지 확인하세요.
+      </div>
+    </section>
+
+    <!-- 6. Compression interaction -->
+    <section id="compression">
+      <h2><span class="num">6</span> 블록 압축과의 상호작용 (중요)</h2>
+      <div class="card">
+        <p>
+          BC1/BC7 같은 RGB 블록 압축은 <strong style="color:#eef0f6">세 채널을 함께</strong> 근사합니다.
+          그런데 패킹된 마스크들은 서로 <strong style="color:#eef0f6">아무 상관없는 데이터</strong>라,
+          한 블록이 RGB를 공유 색으로 뭉뚱그리면 채널 간 오염(cross-channel bleeding)이 생깁니다.
+        </p>
+        <div class="grid-2" style="margin-top:14px">
+          <article class="card" style="box-shadow:none">
+            <h3>알파는 별도 블록</h3>
+            <p style="font-size:13.5px">BC3/BC7/ASTC에서 <strong style="color:#eef0f6">알파는 RGB와 분리 압축</strong>됩니다. 그래서 가장 품질이 중요한 데이터를 <strong style="color:#eef0f6">A 채널</strong>에 두면 오염을 피할 수 있습니다. (단 BC1 알파는 1비트라 부적합)</p>
+          </article>
+          <article class="card" style="box-shadow:none">
+            <h3>중요 데이터는 격리</h3>
+            <p style="font-size:13.5px">품질 민감한 단일 데이터(예: 정밀 하이트)는 RGB 공동 압축을 피해 <strong style="color:#eef0f6">BC4 단일 채널</strong>로 분리하는 편이 깨끗합니다.</p>
+          </article>
+        </div>
+        <div class="callout">
+          <strong>실무 규칙:</strong>
+          ① 마스크맵은 BC1보다 <strong>BC7/ASTC</strong>. ②
+          가장 민감한 값은 <strong>알파(A)</strong>에. ③ 정밀이 생명이면 <strong>BC4로 분리</strong>.
+          ④ 노멀은 되도록 <strong>BC5로 따로</strong> 두고, 페치가 빡빡할 때만 노멀+데이터 패킹을 검토.
+        </div>
+        <div class="callout warn">
+          <strong>연관 문서:</strong> 어떤 압축 포맷이 어떤 채널·용도에 맞는지는
+          허브의 <strong>GPU 텍스처 압축</strong> 가이드에서 더 자세히 다룹니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Decision -->
+    <section id="decision">
+      <h2><span class="num">7</span> 뭐 어떻게 담지? 빠른 선택 가이드</h2>
+      <div class="decision">
+        <div class="decision-item">
+          <div class="q"><strong>PBR 서피스 데이터</strong> — AO·러프·메탈</div>
+          <div class="a">ORM → BC7 / ASTC</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>반투명/컷아웃 알베도</strong></div>
+          <div class="a">RGB(sRGB)+A(mask) → BC7</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>노멀맵</strong> — 품질 우선</div>
+          <div class="a">BC5로 분리 (패킹 X)</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>페치 예산이 빡빡</strong> — 모바일</div>
+          <div class="a">노멀+러프/하이트 패킹 → ASTC</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>정밀이 생명인 단일 데이터</strong></div>
+          <div class="a">BC4 단일 채널로 격리</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>가장 민감한 마스크 1장</strong></div>
+          <div class="a">알파(A) 채널에 배치</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. FAQ -->
+    <section id="faq">
+      <h2><span class="num">8</span> FAQ · 헷갈리기 쉬운 점</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Q. ORM 순서가 문서마다 달라요</h3>
+          <p>
+            맞습니다. <strong style="color:#eef0f6">표준이 아니라 관례</strong>라서 엔진·팀마다 R/G/B 배치가 다릅니다.
+            중요한 건 “셰이더가 꺼내는 채널”과 “텍스처에 구운 채널”을 일치시키고 <strong style="color:#eef0f6">한 곳에 적어두는</strong> 것입니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 알베도랑 마스크를 한 장에 담아도 되나요?</h3>
+          <p>
+            RGB(색)+A(마스크)까지는 흔합니다. 하지만 <strong style="color:#eef0f6">RGB는 sRGB, A는 Linear</strong>라
+            엔진이 이를 분리 처리하는지 확인해야 합니다. 완전히 다른 데이터 4장을 컬러 텍스처에 섞는 건 피하세요.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 왜 러프니스를 G에 두라는 말이 많나요?</h3>
+          <p>
+            일부 압축·서브샘플링에서 <strong style="color:#eef0f6">G(초록) 채널이 상대적으로 정밀</strong>하게 다뤄지는 경우가 있어,
+            눈에 민감한 러프니스를 G에 두는 관례가 생겼습니다. 절대 규칙은 아니고 파이프라인에 따라 다릅니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 노멀도 패킹해서 페치를 줄이면 안 되나요?</h3>
+          <p>
+            됩니다(노멀+데이터). 다만 노멀을 RGB 공동 압축에 넣으면 <strong style="color:#eef0f6">BC5 분리보다 품질이 떨어질</strong> 수 있어,
+            품질이 중요하면 노멀은 따로, 페치가 급하면 패킹으로 트레이드오프합니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 채널 패킹하면 밉맵은요?</h3>
+          <p>
+            채널별로 독립적으로 밉이 생성됩니다. 컷아웃 알파처럼 <strong style="color:#eef0f6">임계값 기반 채널</strong>은
+            밉을 내려가며 커버리지가 변할 수 있으니 알파 커버리지 보존 옵션을 확인하세요.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 압축 없이 패킹만 하면 화질이 최고 아닌가요?</h3>
+          <p>
+            무압축(RGBA8)이면 채널 오염은 없지만 <strong style="color:#eef0f6">메모리가 4~8배</strong>입니다.
+            보통은 패킹 + BC7/ASTC로 균형을 잡고, 정밀이 꼭 필요한 소형 데이터만 무압축을 씁니다.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 9. Cheatsheet -->
+    <section>
+      <h2><span class="num">9</span> 실무 치트시트</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>담을 데이터</th>
+              <th>추천 배치</th>
+              <th>색공간</th>
+              <th>압축</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AO · Roughness · Metallic</td>
+              <td><strong>ORM</strong> (R/G/B)</td>
+              <td>Linear</td>
+              <td>BC7 / ASTC</td>
+            </tr>
+            <tr>
+              <td>알베도 + 오파시티</td>
+              <td>RGB 색 + <strong>A 마스크</strong></td>
+              <td>RGB=sRGB · A=Linear</td>
+              <td>BC7 / BC3 / ASTC</td>
+            </tr>
+            <tr>
+              <td>탄젠트 노멀 (품질 우선)</td>
+              <td><strong>단독 텍스처</strong> (패킹 X)</td>
+              <td>Linear</td>
+              <td>BC5</td>
+            </tr>
+            <tr>
+              <td>노멀 + 러프/하이트 (페치 절감)</td>
+              <td>RG 노멀 + B/A 데이터</td>
+              <td>Linear</td>
+              <td>BC7 / ASTC</td>
+            </tr>
+            <tr>
+              <td>정밀 단일 데이터 (하이트 등)</td>
+              <td><strong>BC4 단일 채널 격리</strong></td>
+              <td>Linear</td>
+              <td>BC4</td>
+            </tr>
+            <tr>
+              <td>무관한 마스크 4장</td>
+              <td>R/G/B/A · 민감한 건 A</td>
+              <td>Linear</td>
+              <td>BC7 / ASTC</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div>
+        <strong style="color:var(--text-muted)">채널 패킹 가이드</strong>
+        · <a href="index.html#channel" style="color:var(--text-muted)">허브로 돌아가기</a>
+      </div>
+      <div>채널 순서는 관례이며 프로젝트마다 다릅니다. 팀 컨벤션을 문서화하고 셰이더와 일치시키세요.</div>
+    </footer>
+  </div>
+</body>
+</html>

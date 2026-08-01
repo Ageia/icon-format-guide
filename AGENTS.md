@@ -35,6 +35,7 @@
 | `index.html` | 허브 셸. 사이드바 탭, 해시 라우팅, 예정 가이드 stub UI |
 | `format-guide.html` | 아이콘 포맷 **완성** 가이드 (단독 페이지 + 허브 iframe) |
 | `texture-compression-guide.html` | GPU 텍스처 압축 **완성** 가이드 (texture 탭 iframe, format-guide 톤) |
+| `channel-packing-guide.html` | 채널 패킹 **완성** 가이드 (channel 탭 iframe, format-guide 톤) |
 | `webp-compare/` | WebP 품질별 압축 비교 툴 + 생성된 WebP 14단계 (raster 탭 iframe). 소스는 자체 에셋 `badge_star.png` |
 | `README.md` | 사람용 소개·링크 표 |
 | `AGENTS.md` | AI/다음 세션용 규칙·맥락 |
@@ -61,7 +62,7 @@
 | `icon` | 아이콘 파일 포맷 | **완성** (`format-guide.html`) |
 | `raster` | 래스터 이미지 포맷 (WebP 품질별 압축 비교) | **완성** (`webp-compare/compression_comparison.html`) |
 | `texture` | GPU 텍스처 압축 (BC·ASTC·ETC2·PVRTC) | **완성** (`texture-compression-guide.html`) |
-| `channel` | 채널 패킹 (ORM·노멀·sRGB) | 예정 (stub) |
+| `channel` | 채널 패킹 (ORM·노멀·sRGB vs Linear) | **완성** (`channel-packing-guide.html`) |
 | `container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | 예정 (stub) |
 
 > 언리얼 전용 탭(`material`·`nanite`·`import`·`lighting`·`vfx`·`collision`)은 제거됨. 되살리지 말 것.
@@ -98,8 +99,8 @@
 상세·체크리스트는 **`docs/TODO.md`** 가 소스 오브 트루스.  
 우선순위 제안만 여기 요약:
 
-1. Now: 채널 패킹 풀 가이드(`#channel`), 허브 로드 방식 정리  
-2. Next: 컨테이너·전송 포맷 가이드(`#container`), 래스터 탭 JPEG/AVIF 보강  
+1. Now: 컨테이너·전송 포맷 풀 가이드(`#container`) — 마지막 남은 stub  
+2. Next: 래스터 탭 JPEG/AVIF 보강, 텍스처 가이드 아티팩트 비교 이미지  
 3. Later: 한/영 토글, repo 이름 변경(포맷·압축 성격에 맞게) 등
 
 ## 검증

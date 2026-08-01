@@ -571,16 +571,16 @@
           <span class="badge badge-live">완성</span>
         </button>
 
-        <div class="nav-group">포맷 · 압축 (작성 예정)</div>
-
         <button type="button" class="nav-item" data-guide="channel">
           <span class="nav-icon">CH</span>
           <span class="nav-text">
             <strong>채널 패킹</strong>
             <span>ORM · 노멀 · sRGB vs Linear</span>
           </span>
-          <span class="badge badge-soon">예정</span>
+          <span class="badge badge-live">완성</span>
         </button>
+
+        <div class="nav-group">포맷 · 압축 (작성 예정)</div>
 
         <button type="button" class="nav-item" data-guide="container">
           <span class="nav-icon">KTX</span>
@@ -630,10 +630,12 @@
           <iframe class="panel-frame" id="textureFrame" data-src="texture-compression-guide.html" title="GPU 텍스처 압축 가이드" loading="lazy"></iframe>
         </section>
 
-        <!-- Placeholder guides -->
-        <section class="panel" id="panel-channel" data-title="채널 패킹" data-sub="작성 예정 · 목차와 선택 뼈대">
-          <div class="panel-scroll"><div class="panel-inner" data-stub="channel"></div></div>
+        <!-- Live: channel packing guide via iframe -->
+        <section class="panel" id="panel-channel" data-title="채널 패킹" data-sub="완성 가이드 · ORM · sRGB vs Linear" data-standalone="channel-packing-guide.html">
+          <iframe class="panel-frame" id="channelFrame" data-src="channel-packing-guide.html" title="채널 패킹 가이드" loading="lazy"></iframe>
         </section>
+
+        <!-- Placeholder guides -->
         <section class="panel" id="panel-container" data-title="컨테이너·전송 포맷" data-sub="작성 예정 · 목차와 선택 뼈대">
           <div class="panel-scroll"><div class="panel-inner" data-stub="container"></div></div>
         </section>
@@ -643,34 +645,6 @@
 
   <script>
     const GUIDES = {
-      channel: {
-        pills: ["ORM 패킹", "sRGB vs Linear", "노멀"],
-        title: "채널 패킹 실전 가이드",
-        lead: "마스크 여러 장을 한 텍스처의 R/G/B/A에 몰아넣어 샘플러·메모리를 아끼는 기법입니다. 어떤 데이터를 어느 채널에, 어떤 색공간으로 둘지 정리합니다.",
-        toc: ["패킹 원리", "ORM 관례", "sRGB vs Linear", "노멀 인코딩", "함정", "FAQ"],
-        cards: [
-          {
-            h: "다룰 핵심",
-            items: [
-              "R/G/B/A 역할 배치 (ORM 등)",
-              "데이터 채널은 왜 Linear인가",
-              "노멀 X/Y 저장, Z 재구성",
-              "압축 아티팩트가 잘 생기는 채널"
-            ]
-          },
-          {
-            h: "목표 독자",
-            items: ["TA / 그래픽 프로그래머", "머티리얼 셋업 담당", "메모리 최적화 담당"]
-          }
-        ],
-        decisions: [
-          ["AO·Roughness·Metallic", "한 장에 ORM 패킹"],
-          ["컬러가 아닌 데이터 맵", "sRGB Off (Linear)"],
-          ["노멀 맵 저장", "2채널 + Z 재구성"],
-          ["채널마다 품질 요구 다름", "중요 데이터를 덜 손상되는 채널로"]
-        ],
-        note: "샘플 텍스처의 채널 분해 이미지와 함께 정리할 예정입니다."
-      },
       container: {
         pills: ["DDS", "KTX2", "Basis"],
         title: "컨테이너·전송 포맷 실전 가이드",
