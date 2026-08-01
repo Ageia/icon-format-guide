@@ -7,7 +7,8 @@ AI·새 세션은 작업 전후 이 파일을 갱신한다.
 
 ## 지금 하기 (Now)
 
-- [ ] 래스터 탭에 WebP 외 포맷(JPEG·AVIF) 비교/설명 보강 (현재는 WebP 품질 비교만)
+- [ ] (심화) badge_cloud 등 다른 에셋으로도 압축 비교 세트 생성 옵션
+- [ ] (심화) 채널 패킹 가이드에 실제 채널 분해 샘플 이미지
 
 ## 다음에 (Next)
 
@@ -25,6 +26,7 @@ AI·새 세션은 작업 전후 이 파일을 갱신한다.
 
 ## 완료 (Done) — 최근
 
+- [x] 래스터 탭을 완성 가이드로 승격 (`raster-format-guide.html`) — PNG·JPEG·WebP·AVIF·GIF 실측 용량, JPEG 알파 함정 실제 이미지, WebP 스크러버 링크 (`raster-compare/`)
 - [x] 텍스처 가이드에 실제 BC1 압축 아티팩트 비교 이미지 추가 (`texture-artifacts/` — 자체 BC1 인코더로 생성, 밴딩·블록 계단 시각화)
 - [x] 컨테이너·전송 포맷 완성 가이드 (`container-format-guide.html`, `#container`) — DDS·KTX2·Basis, 전송 vs GPU 두 축
 - [x] 예정(stub) 렌더 머신 제거 — 모든 탭 완성 iframe화

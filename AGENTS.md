@@ -37,7 +37,9 @@
 | `texture-compression-guide.html` | GPU 텍스처 압축 **완성** 가이드 (texture 탭 iframe, format-guide 톤) |
 | `channel-packing-guide.html` | 채널 패킹 **완성** 가이드 (channel 탭 iframe, format-guide 톤) |
 | `container-format-guide.html` | 컨테이너·전송 포맷 **완성** 가이드 (container 탭 iframe, format-guide 톤) |
-| `webp-compare/` | WebP 품질별 압축 비교 툴 + 생성된 WebP 14단계 (raster 탭 iframe). 소스는 자체 에셋 `badge_star.png` |
+| `raster-format-guide.html` | 래스터 포맷 **완성** 가이드 (raster 탭 iframe). 알파 함정·실측 용량·WebP 스크러버 링크 |
+| `raster-compare/` | 크로스 포맷 실측 세트(PNG/WebP/AVIF/JPEG/GIF) + `generate.py`. 소스는 `badge_star`에 원형 알파 마스크 |
+| `webp-compare/` | WebP 품질별 압축 비교 스크러버 툴 + WebP 14단계. raster 가이드에서 버튼으로 연결. 소스 `badge_star.png` |
 | `texture-artifacts/` | 실제 BC1 압축 아티팩트 비교 이미지 + `generate.py`(자체 BC1 인코더). 텍스처 가이드에 임베드 |
 | `README.md` | 사람용 소개·링크 표 |
 | `AGENTS.md` | AI/다음 세션용 규칙·맥락 |
@@ -62,7 +64,7 @@
 | id | 제목 | 상태 |
 |----|------|------|
 | `icon` | 아이콘 파일 포맷 | **완성** (`format-guide.html`) |
-| `raster` | 래스터 이미지 포맷 (WebP 품질별 압축 비교) | **완성** (`webp-compare/compression_comparison.html`) |
+| `raster` | 래스터 이미지 포맷 (PNG·JPEG·WebP·AVIF 실측) | **완성** (`raster-format-guide.html`, WebP 스크러버는 그 안에서 링크) |
 | `texture` | GPU 텍스처 압축 (BC·ASTC·ETC2·PVRTC) | **완성** (`texture-compression-guide.html`) |
 | `channel` | 채널 패킹 (ORM·노멀·sRGB vs Linear) | **완성** (`channel-packing-guide.html`) |
 | `container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | **완성** (`container-format-guide.html`) |

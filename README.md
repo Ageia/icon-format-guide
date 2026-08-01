@@ -20,7 +20,7 @@
 | 해시 | 가이드 | 상태 | 링크 |
 |------|--------|------|------|
 | `#icon` | 아이콘 파일 포맷 | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#icon) |
-| `#raster` | 래스터 이미지 포맷 (WebP 품질별 압축 비교) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#raster) |
+| `#raster` | 래스터 이미지 포맷 (PNG·JPEG·WebP·AVIF 실측 + WebP 스크러버) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#raster) |
 | `#texture` | GPU 텍스처 압축 (BC·ASTC·ETC2) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#texture) |
 | `#channel` | 채널 패킹 (ORM·노멀·sRGB) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#channel) |
 | `#container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#container) |
@@ -34,7 +34,9 @@
 - `texture-compression-guide.html` — GPU 텍스처 압축 완성 가이드 (BC·ASTC·ETC2)
 - `channel-packing-guide.html` — 채널 패킹 완성 가이드 (ORM·노멀·sRGB vs Linear)
 - `container-format-guide.html` — 컨테이너·전송 포맷 완성 가이드 (DDS·KTX2·Basis)
-- `webp-compare/` — WebP 품질별 압축 비교 툴 + 생성된 WebP 14단계 (`generate.py`로 재생성)
+- `raster-format-guide.html` — 래스터 포맷 완성 가이드 (PNG·JPEG·WebP·AVIF 실측·알파 함정)
+- `raster-compare/` — 크로스 포맷 실측 세트 + `generate.py` (PNG/WebP/AVIF/JPEG/GIF)
+- `webp-compare/` — WebP 품질별 압축 비교 스크러버 툴 + WebP 14단계 (`generate.py`로 재생성)
 - `texture-artifacts/` — 실제 BC1 압축 아티팩트 비교 이미지 (`generate.py`, 자체 BC1 인코더)
 - `AGENTS.md` — 새 세션·AI용 프로젝트 규칙/맥락
 - `docs/TODO.md` — 하고 싶은 일 백로그 (Now / Next / Later)
