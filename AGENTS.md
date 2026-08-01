@@ -18,7 +18,7 @@
 1. `README.md` + 이 파일(`AGENTS.md`) 읽기  
 2. **`docs/TODO.md`** — Now / Next 백로그 확인·작업 후 체크  
 3. `git log -10 --oneline` / `git status`  
-4. `index.html` — 탭 목록, `setGuide`, 해시 라우팅, stub(`GUIDES`)  
+4. `index.html` — 탭 목록, `setGuide`, 해시 라우팅, iframe 로드(`syncFrames`)  
 5. `format-guide.html` — **완성 가이드 톤·UI 레퍼런스**  
 6. 작업 후 `main`에 커밋·push → GitHub Pages 자동 반영 (1~2분)
 
@@ -32,10 +32,11 @@
 
 | 파일 | 역할 |
 |------|------|
-| `index.html` | 허브 셸. 사이드바 탭, 해시 라우팅, 예정 가이드 stub UI |
+| `index.html` | 허브 셸. 사이드바 탭, 해시 라우팅, 탭별 iframe 로드/언로드(`syncFrames`) |
 | `format-guide.html` | 아이콘 포맷 **완성** 가이드 (단독 페이지 + 허브 iframe) |
 | `texture-compression-guide.html` | GPU 텍스처 압축 **완성** 가이드 (texture 탭 iframe, format-guide 톤) |
 | `channel-packing-guide.html` | 채널 패킹 **완성** 가이드 (channel 탭 iframe, format-guide 톤) |
+| `container-format-guide.html` | 컨테이너·전송 포맷 **완성** 가이드 (container 탭 iframe, format-guide 톤) |
 | `webp-compare/` | WebP 품질별 압축 비교 툴 + 생성된 WebP 14단계 (raster 탭 iframe). 소스는 자체 에셋 `badge_star.png` |
 | `README.md` | 사람용 소개·링크 표 |
 | `AGENTS.md` | AI/다음 세션용 규칙·맥락 |
@@ -63,7 +64,7 @@
 | `raster` | 래스터 이미지 포맷 (WebP 품질별 압축 비교) | **완성** (`webp-compare/compression_comparison.html`) |
 | `texture` | GPU 텍스처 압축 (BC·ASTC·ETC2·PVRTC) | **완성** (`texture-compression-guide.html`) |
 | `channel` | 채널 패킹 (ORM·노멀·sRGB vs Linear) | **완성** (`channel-packing-guide.html`) |
-| `container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | 예정 (stub) |
+| `container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | **완성** (`container-format-guide.html`) |
 
 > 언리얼 전용 탭(`material`·`nanite`·`import`·`lighting`·`vfx`·`collision`)은 제거됨. 되살리지 말 것.
 
@@ -72,12 +73,12 @@
 - **UI·본문 언어: 한국어.** 한/영 토글은 나중 과제. 지금은 한국어만 유지.
 - 톤: 실무 선택 가이드. 표 + “뭐 쓰지?” 결정 리스트 + FAQ + 짧은 치트시트.
 - `format-guide.html` 스타일(다크, purple/cyan 액센트, card/table/tag)을 허브·후속 가이드와 맞출 것.
-- 예정 가이드는 `index.html`의 `GUIDES` 객체 + 사이드바 버튼 + `#panel-{id}` 섹션을 **세트로** 추가.
-- 가이드를 “완성”으로 올릴 때:
-  1. 본문 HTML 작성 (단독 파일 권장: 예 `guides/texture-format.html` 또는 아이콘처럼 루트 파일)
-  2. 허브에서 iframe/로드 연결
-  3. README·이 파일 상태 표를 **완성**으로 갱신
-  4. 사이드바 배지 `예정` → `완성`
+- **현재 모든 탭이 완성 상태**라 예정(stub) 렌더 머신(`GUIDES`/`renderStub`)은 제거됨. 새 가이드는 아래 iframe 패턴으로 추가.
+- 새 가이드를 추가·완성할 때 (아이콘·텍스처 등과 동일 패턴):
+  1. 본문 HTML 작성 — 루트 단독 파일 (예: `texture-compression-guide.html`), `format-guide.html` 톤 복제
+  2. `index.html`에 **세트로** 추가: 사이드바 `.nav-item[data-guide=id]` + `#panel-id` 섹션(iframe, `data-src`/`data-standalone`)
+  3. iframe은 `.panel-frame[data-src]`로 두면 `syncFrames`가 활성 탭만 로드/언로드 처리
+  4. README·이 파일 상태 표를 **완성**으로 갱신, 사이드바 배지 `badge-live`
 
 ## 하지 말 것
 
@@ -99,8 +100,10 @@
 상세·체크리스트는 **`docs/TODO.md`** 가 소스 오브 트루스.  
 우선순위 제안만 여기 요약:
 
-1. Now: 컨테이너·전송 포맷 풀 가이드(`#container`) — 마지막 남은 stub  
-2. Next: 래스터 탭 JPEG/AVIF 보강, 텍스처 가이드 아티팩트 비교 이미지  
+**모든 탭(icon·raster·texture·channel·container) 완성됨.** 다음은 심화·품질 작업 위주:
+
+1. Now: 래스터 탭 JPEG/AVIF 비교 보강, 텍스처 가이드 아티팩트(BC1 밴딩 등) 비교 이미지  
+2. Next: 채널 패킹 채널 분해 샘플 이미지, 가이드 간 상호 링크 점검  
 3. Later: 한/영 토글, repo 이름 변경(포맷·압축 성격에 맞게) 등
 
 ## 검증

@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>컨테이너·전송 포맷 가이드 · 파일 포맷·압축 가이드 허브</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --bg-elevated: #171a22;
+      --bg-card: #1c2030;
+      --bg-soft: #242a3a;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text: #eef0f6;
+      --text-muted: #9aa3b8;
+      --text-dim: #6b7389;
+      --accent: #a78bfa;
+      --accent-2: #67e8f9;
+      --accent-3: #f9a8d4;
+      --mint: #6ee7b7;
+      --amber: #fbbf24;
+      --rose: #fb7185;
+      --blue: #60a5fa;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --font: "Segoe UI", "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      --mono: "Cascadia Code", "Consolas", "SF Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(167, 139, 250, 0.18), transparent 55%),
+        radial-gradient(900px 500px at 90% 0%, rgba(103, 232, 249, 0.12), transparent 50%),
+        radial-gradient(800px 400px at 50% 100%, rgba(249, 168, 212, 0.08), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* Hero */
+    header.hero {
+      position: relative;
+      padding: 40px 36px;
+      border-radius: 28px;
+      background:
+        linear-gradient(145deg, rgba(167, 139, 250, 0.15), rgba(103, 232, 249, 0.06) 45%, rgba(28, 32, 48, 0.9)),
+        var(--bg-card);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 36px;
+    }
+
+    header.hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(249, 168, 212, 0.2), transparent 35%),
+        radial-gradient(circle at 15% 80%, rgba(110, 231, 183, 0.12), transparent 40%);
+      pointer-events: none;
+    }
+
+    .hero-inner { position: relative; z-index: 1; }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    .pill strong { color: var(--text); font-weight: 700; }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      margin-bottom: 14px;
+      background: linear-gradient(120deg, #fff 0%, #e9d5ff 40%, #a5f3fc 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 64ch;
+      margin-bottom: 22px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 28px;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .hero-meta span { display: flex; align-items: center; gap: 8px; }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 0 3px rgba(110, 231, 183, 0.2);
+    }
+
+    /* Nav */
+    nav.toc {
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 12px;
+      margin-bottom: 32px;
+      border-radius: 16px;
+      background: rgba(15, 17, 23, 0.75);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+    }
+
+    nav.toc a {
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: 0.15s ease;
+    }
+
+    nav.toc a:hover {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border);
+      text-decoration: none;
+    }
+
+    /* Sections */
+    section { margin-bottom: 40px; }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 750;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 800;
+      background: linear-gradient(135deg, rgba(167, 139, 250, 0.35), rgba(103, 232, 249, 0.2));
+      border: 1px solid var(--border-strong);
+      color: #fff;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
+    }
+
+    p { color: var(--text-muted); margin-bottom: 12px; }
+    p:last-child { margin-bottom: 0; }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    .card + .card { margin-top: 14px; }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+    @media (max-width: 820px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      header.hero { padding: 28px 22px; }
+    }
+
+    /* Comparison table */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 760px;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--bg-soft);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    td strong { color: var(--text); font-weight: 650; }
+    td code, .mono {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: #e9d5ff;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .tag-best { background: rgba(110, 231, 183, 0.15); color: var(--mint); }
+    .tag-good { background: rgba(96, 165, 250, 0.15); color: var(--blue); }
+    .tag-ok { background: rgba(251, 191, 36, 0.15); color: var(--amber); }
+    .tag-avoid { background: rgba(251, 113, 133, 0.15); color: var(--rose); }
+    .tag-desktop { background: rgba(167, 139, 250, 0.18); color: #c4b5fd; }
+    .tag-mobile { background: rgba(103, 232, 249, 0.12); color: #a5f3fc; }
+    .tag-cross { background: rgba(110, 231, 183, 0.14); color: #6ee7b7; }
+    .tag-transmit { background: rgba(251, 191, 36, 0.14); color: #fcd34d; }
+    .tag-gpu { background: rgba(167, 139, 250, 0.16); color: #c4b5fd; }
+
+    /* Format cards */
+    .format-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .format-card:hover {
+      border-color: rgba(167, 139, 250, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .format-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+    }
+
+    .format-icon {
+      width: 56px;
+      height: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: -0.02em;
+      flex-shrink: 0;
+      border: 1px solid var(--border-strong);
+    }
+
+    .format-head h3 { margin: 0 0 4px; font-size: 1.1rem; }
+    .format-head .sub { font-size: 12.5px; color: var(--text-dim); }
+
+    .format-body { padding: 18px 20px 20px; }
+    .format-body p { font-size: 14px; }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 8px 12px;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+
+    .kv dt { color: var(--text-dim); font-weight: 600; }
+    .kv dd { color: var(--text-muted); }
+
+    ul.checklist {
+      list-style: none;
+      margin-top: 12px;
+      display: grid;
+      gap: 6px;
+    }
+
+    ul.checklist li {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      padding-left: 22px;
+      position: relative;
+    }
+
+    ul.checklist li::before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-weight: 700;
+    }
+
+    ul.checklist li.yes::before { content: "✓"; color: var(--mint); }
+    ul.checklist li.no::before { content: "✕"; color: var(--rose); }
+    ul.checklist li.maybe::before { content: "·"; color: var(--amber); font-size: 18px; line-height: 1; }
+
+    /* Flow diagram */
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .flow-step {
+      flex: 1 1 150px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      padding: 14px 14px;
+    }
+
+    .flow-step .st {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+
+    .flow-step .ti { font-size: 13.5px; color: var(--text); font-weight: 650; margin-top: 4px; }
+    .flow-step .de { font-size: 12px; color: var(--text-dim); margin-top: 3px; }
+
+    .flow-arrow {
+      align-self: center;
+      color: var(--text-dim);
+      font-weight: 800;
+      font-size: 18px;
+    }
+
+    @media (max-width: 700px) {
+      .flow { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); align-self: flex-start; margin-left: 20px; }
+    }
+
+    /* Decision */
+    .decision { display: grid; gap: 10px; }
+
+    .decision-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .decision-item .q { font-size: 14px; color: var(--text-muted); }
+    .decision-item .q strong { color: var(--text); }
+    .decision-item .a {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+      background: rgba(167, 139, 250, 0.15);
+      color: #c4b5fd;
+      border: 1px solid rgba(167, 139, 250, 0.25);
+    }
+
+    @media (max-width: 640px) {
+      .decision-item { grid-template-columns: 1fr; }
+      .decision-item .a { justify-self: start; }
+    }
+
+    /* Callout */
+    .callout {
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      background: rgba(167, 139, 250, 0.08);
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    .callout strong { color: #e9d5ff; }
+
+    .callout.warn {
+      background: rgba(251, 191, 36, 0.08);
+      border-color: rgba(251, 191, 36, 0.2);
+    }
+
+    .callout.warn strong { color: #fde68a; }
+
+    footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-dim);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="hero-inner">
+        <div class="badge-row">
+          <span class="pill"><strong>파일 포맷·압축 가이드</strong></span>
+          <span class="pill">컨테이너·전송 포맷</span>
+          <span class="pill">DDS · KTX2 · Basis Universal</span>
+        </div>
+        <h1>컨테이너·전송 포맷<br />완전 가이드</h1>
+        <p class="lead">
+          BC·ASTC로 압축한 텍스처를 <strong style="color:#eef0f6">밉·큐브맵·메타데이터까지 담아 GPU로 그대로 올리는</strong> 그릇이
+          컨테이너(DDS·KTX2)입니다. 여기에 <strong style="color:#eef0f6">다운로드 용량까지 줄이는</strong> 슈퍼컴프레션(Basis)이 더해집니다.
+          이 문서는 “전송용(작게 받기)”과 “GPU용(그대로 올리기)”이라는 두 축으로 포맷 선택을 정리합니다.
+        </p>
+        <div class="hero-meta">
+          <span><i class="dot"></i>컨테이너 = 압축 텍스처의 그릇</span>
+          <span><i class="dot" style="background:var(--accent-2);box-shadow:0 0 0 3px rgba(103,232,249,.2)"></i>전송용 vs GPU용</span>
+          <span><i class="dot" style="background:var(--accent-3);box-shadow:0 0 0 3px rgba(249,168,212,.2)"></i>트랜스코드로 멀티플랫폼</span>
+        </div>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="목차">
+      <a href="#overview">한눈에 보기</a>
+      <a href="#why">왜 컨테이너</a>
+      <a href="#twoaxis">전송 vs GPU</a>
+      <a href="#formats">포맷 상세</a>
+      <a href="#pipeline">파이프라인</a>
+      <a href="#decision">선택 가이드</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <!-- 1. Overview -->
+    <section id="overview">
+      <h2><span class="num">1</span> 한눈에 보기</h2>
+      <div class="legend">
+        <span class="tag tag-gpu">GPU 컨테이너</span>
+        <span class="tag tag-transmit">전송·슈퍼컴프레션</span>
+        <span class="tag tag-desktop">데스크톱</span>
+        <span class="tag tag-cross">크로스</span>
+        <span class="tag tag-best">추천</span>
+        <span class="tag tag-avoid">레거시</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>포맷</th>
+              <th>성격</th>
+              <th>담는 것</th>
+              <th>플랫폼</th>
+              <th>GPU 직행</th>
+              <th>평가</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>DDS</strong> <code>.dds</code></td>
+              <td><span class="tag tag-gpu">GPU 컨테이너</span></td>
+              <td>BCn · 밉 · 큐브맵 · 배열 · 볼륨</td>
+              <td><span class="tag tag-desktop">데스크톱/D3D</span></td>
+              <td>예 (BC 그대로)</td>
+              <td><span class="tag tag-best">데스크톱 표준</span></td>
+            </tr>
+            <tr>
+              <td><strong>KTX2</strong> <code>.ktx2</code></td>
+              <td><span class="tag tag-gpu">GPU 컨테이너</span> <span class="tag tag-transmit">+슈퍼컴프</span></td>
+              <td>모든 GL/VK 포맷 · 밉 · Basis 내장</td>
+              <td><span class="tag tag-cross">크로스</span></td>
+              <td>예 (또는 트랜스코드)</td>
+              <td><span class="tag tag-best">크로스 표준</span></td>
+            </tr>
+            <tr>
+              <td><strong>Basis</strong> <code>.basis</code></td>
+              <td><span class="tag tag-transmit">슈퍼컴프레션</span></td>
+              <td>ETC1S / UASTC 중간 표현</td>
+              <td><span class="tag tag-cross">크로스</span></td>
+              <td>트랜스코드 후</td>
+              <td><span class="tag tag-best">배포 용량</span></td>
+            </tr>
+            <tr>
+              <td><strong>KTX1</strong> <code>.ktx</code></td>
+              <td><span class="tag tag-gpu">GPU 컨테이너</span></td>
+              <td>GL 포맷 · 밉 (Basis 미내장)</td>
+              <td><span class="tag tag-cross">크로스(구)</span></td>
+              <td>예</td>
+              <td><span class="tag tag-ok">KTX2로 대체</span></td>
+            </tr>
+            <tr>
+              <td><strong>PVR</strong> <code>.pvr</code></td>
+              <td><span class="tag tag-gpu">GPU 컨테이너</span></td>
+              <td>PVRTC/ETC 등 · 밉</td>
+              <td><span class="tag tag-mobile">구형 iOS</span></td>
+              <td>예</td>
+              <td><span class="tag tag-avoid">레거시</span></td>
+            </tr>
+            <tr>
+              <td><strong>PNG / JPG</strong></td>
+              <td><span class="tag tag-transmit">전송 이미지</span></td>
+              <td>디코드용 픽셀 (밉·GPU포맷 없음)</td>
+              <td><span class="tag tag-cross">전부</span></td>
+              <td>아니오 (디코드 필요)</td>
+              <td><span class="tag tag-ok">소스·웹 표시용</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout">
+        <strong>핵심 한 줄:</strong>
+        데스크톱 전용이면 <strong>DDS</strong>, 크로스플랫폼·웹·다운로드 용량까지 챙기려면
+        <strong>KTX2(+Basis)</strong>가 기본입니다. PNG/JPG는 “<em>보관·표시용</em>”이지 GPU가 바로 쓰는 포맷이 아닙니다.
+      </div>
+    </section>
+
+    <!-- 2. Why container -->
+    <section id="why">
+      <h2><span class="num">2</span> 왜 컨테이너가 필요한가</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>PNG/JPG로는 부족한 것</h3>
+          <p>PNG는 픽셀 한 장을 담을 뿐입니다. GPU가 쓰려면 <strong style="color:#eef0f6">디코드 → 블록 압축 → 밉 생성</strong>을 매번 해야 합니다.</p>
+          <ul class="checklist">
+            <li class="no">GPU 블록 포맷(BC/ASTC)을 담지 못함</li>
+            <li class="no">밉맵 체인·큐브맵·배열을 못 담음</li>
+            <li class="no">색공간·용도 같은 메타데이터가 빈약</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>컨테이너가 담는 것</h3>
+          <p>DDS·KTX2는 <strong style="color:#eef0f6">이미 압축된 텍스처</strong>를 구조째 담아, 로드 시 디코드 없이 GPU로 바로 올립니다.</p>
+          <ul class="checklist">
+            <li class="yes">BC/ASTC/ETC 블록 데이터 그대로</li>
+            <li class="yes">밉맵 전체 · 큐브맵 6면 · 텍스처 배열</li>
+            <li class="yes">포맷·색공간·차원 등 메타데이터</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout warn">
+        <strong>로드 성능 차이:</strong> PNG는 런타임에 CPU 디코드+밉 생성 비용이 듭니다.
+        컨테이너는 <strong>메모리에 그대로 memcpy 수준</strong>으로 올라가 로딩이 빠르고 히칭이 적습니다.
+      </div>
+    </section>
+
+    <!-- 3. Two axis -->
+    <section id="twoaxis">
+      <h2><span class="num">3</span> 두 축: 전송용 vs GPU용</h2>
+      <div class="card">
+        <p>
+          텍스처 파일을 고를 때는 목적이 둘로 갈립니다. 이 둘을 이어주는 다리가 <strong style="color:#eef0f6">Basis 트랜스코딩</strong>입니다.
+        </p>
+        <div class="grid-2" style="margin-top:14px">
+          <article class="card" style="box-shadow:none">
+            <h3><span class="tag tag-transmit">전송용</span> 작게 받기</h3>
+            <p style="font-size:13.5px">다운로드·디스크 용량이 목표. 가변 압축으로 <strong style="color:#eef0f6">최대한 작게</strong>. 예: PNG/JPG, Basis(ETC1S).</p>
+          </article>
+          <article class="card" style="box-shadow:none">
+            <h3><span class="tag tag-gpu">GPU용</span> 그대로 올리기</h3>
+            <p style="font-size:13.5px">VRAM·대역폭이 목표. <strong style="color:#eef0f6">고정 비트레이트 블록 포맷</strong>으로 GPU가 직접 샘플. 예: DDS(BC), KTX2(ASTC).</p>
+          </article>
+        </div>
+        <div class="callout">
+          <strong>Basis가 다리인 이유:</strong> <code>.basis</code>/<code>.ktx2</code> 하나를 배포하고,
+          로드 시 기기에 맞는 GPU 포맷(BC7·ASTC·ETC2 등)으로 <strong>트랜스코드</strong>합니다.
+          “플랫폼마다 따로 굽기”를 “한 번 배포 + 런타임 변환”으로 바꿔줍니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Format details -->
+    <section id="formats">
+      <h2><span class="num">4</span> 포맷별 상세 설명</h2>
+      <div class="grid-2" style="margin-top:4px">
+
+        <article class="format-card" id="fmt-dds">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#312e81,#6366f1);color:#e0e7ff">DDS</div>
+            <div>
+              <h3>DDS · DirectDraw Surface</h3>
+              <div class="sub">데스크톱 BC 컨테이너 표준</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              마이크로소프트 포맷으로, 데스크톱/콘솔 파이프라인에서 <strong style="color:#eef0f6">BC 텍스처의 사실상 표준 그릇</strong>입니다.
+              밉·큐브맵·배열·볼륨을 담고, 대부분의 DCC·엔진 툴이 읽고 씁니다.
+            </p>
+            <dl class="kv">
+              <dt>담는 포맷</dt><dd>BC1~7, 무압축 등</dd>
+              <dt>구조</dt><dd>밉 · 큐브맵 · 배열 · 3D</dd>
+              <dt>플랫폼</dt><dd>D3D 계열(PC/콘솔)에 최적</dd>
+              <dt>약점</dt><dd>모바일 GPU 포맷·슈퍼컴프레션엔 약함</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">PC/콘솔 전용 프로젝트의 기본 컨테이너</li>
+              <li class="maybe">크로스플랫폼이면 KTX2가 더 유연</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-ktx2">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#134e4a,#2dd4bf);color:#ccfbf1">KTX2</div>
+            <div>
+              <h3>KTX2 · Khronos Texture</h3>
+              <div class="sub">크로스플랫폼 · Basis 내장</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              Khronos(OpenGL/Vulkan) 표준 컨테이너입니다. <strong style="color:#eef0f6">모든 GPU 포맷</strong>을 담고,
+              <strong style="color:#eef0f6">Basis 슈퍼컴프레션(UASTC/ETC1S)을 내장</strong>해 전송·GPU 두 마리 토끼를 잡습니다. glTF의 텍스처 표준(KHR_texture_basisu)이기도 합니다.
+            </p>
+            <dl class="kv">
+              <dt>담는 포맷</dt><dd>BC·ASTC·ETC·무압축 + Basis</dd>
+              <dt>구조</dt><dd>밉 · 큐브맵 · 배열</dd>
+              <dt>플랫폼</dt><dd>PC·모바일·웹(WebGL/WebGPU)</dd>
+              <dt>강점</dt><dd>한 파일로 멀티플랫폼 트랜스코드</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">크로스플랫폼·웹·glTF 배포</li>
+              <li class="yes">다운로드 용량과 GPU 효율을 동시에</li>
+              <li class="maybe">툴 체인(toktx 등) 셋업이 필요</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-basis">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#4c1d95,#a78bfa);color:#ede9fe">BASIS</div>
+            <div>
+              <h3>Basis Universal</h3>
+              <div class="sub">슈퍼컴프레션 · 런타임 트랜스코드</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              특정 GPU 포맷이 아니라 <strong style="color:#eef0f6">중간 표현</strong>입니다. 로드 시 기기에 맞는
+              BC7·ASTC·ETC2·PVRTC 등으로 <strong style="color:#eef0f6">빠르게 트랜스코드</strong>됩니다. 두 모드가 있습니다.
+            </p>
+            <dl class="kv">
+              <dt>ETC1S</dt><dd>매우 작음 · 품질 보통 (배포 우선)</dd>
+              <dt>UASTC</dt><dd>큼 · 고품질 (ASTC/BC7급)</dd>
+              <dt>배포</dt><dd><code>.basis</code> 또는 <code>.ktx2</code> 내부</dd>
+              <dt>강점</dt><dd>한 에셋 → 여러 GPU 포맷</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="yes">웹·모바일 다운로드 용량 최소화</li>
+              <li class="yes">노멀 등 고품질은 UASTC, 배경은 ETC1S</li>
+              <li class="maybe">트랜스코드 결과는 네이티브 인코딩보다 살짝 낮을 수 있음</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="format-card" id="fmt-legacy">
+          <div class="format-head">
+            <div class="format-icon" style="background:linear-gradient(135deg,#334155,#94a3b8);color:#f1f5f9">KTX1<br>PVR</div>
+            <div>
+              <h3>KTX1 · PVR (레거시)</h3>
+              <div class="sub">이전 세대 GPU 컨테이너</div>
+            </div>
+          </div>
+          <div class="format-body">
+            <p>
+              KTX1은 KTX2 이전의 Khronos 컨테이너(슈퍼컴프레션 없음), PVR은 PowerVR 툴 계열 포맷입니다.
+              여전히 읽히지만 <strong style="color:#eef0f6">신규 파이프라인은 KTX2로 가는 추세</strong>입니다.
+            </p>
+            <dl class="kv">
+              <dt>KTX1</dt><dd>GL 포맷·밉, Basis 미내장</dd>
+              <dt>PVR</dt><dd>구형 iOS/PowerVR 위주</dd>
+              <dt>권장</dt><dd>신규는 KTX2 / DDS로</dd>
+            </dl>
+            <ul class="checklist">
+              <li class="maybe">기존 자산 호환 유지용</li>
+              <li class="no">신규 크로스플랫폼 배포의 1순위</li>
+            </ul>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 5. Pipeline -->
+    <section id="pipeline">
+      <h2><span class="num">5</span> 에셋 파이프라인 흐름</h2>
+      <div class="card">
+        <p>소스부터 GPU까지, 컨테이너가 어디에 끼는지 한 줄로 보면:</p>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="st">SOURCE</div>
+            <div class="ti">무손실 소스</div>
+            <div class="de">PNG/TGA/EXR (작업 원본)</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="st">ENCODE</div>
+            <div class="ti">압축·굽기</div>
+            <div class="de">BC/ASTC 또는 Basis 인코딩</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="st">CONTAIN</div>
+            <div class="ti">컨테이너 저장</div>
+            <div class="de">DDS / KTX2 (+밉·큐브맵)</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="st">RUNTIME</div>
+            <div class="ti">로드·업로드</div>
+            <div class="de">직행 또는 Basis 트랜스코드 → GPU</div>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>원칙:</strong> 소스에 미리 BC를 구워 넣지 말고, <strong>무손실 소스를 보관</strong>한 뒤
+          빌드 단계에서 타깃별 컨테이너로 굽습니다. 데스크톱은 DDS, 크로스/웹은 KTX2(+Basis)로 분기하면 관리가 깔끔합니다.
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Decision -->
+    <section id="decision">
+      <h2><span class="num">6</span> 뭐 쓰지? 빠른 선택 가이드</h2>
+      <div class="decision">
+        <div class="decision-item">
+          <div class="q"><strong>PC/콘솔 전용</strong> — BC 위주 파이프라인</div>
+          <div class="a">DDS</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>모바일+PC+웹 크로스플랫폼</strong></div>
+          <div class="a">KTX2 (+Basis)</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>웹/glTF 에셋 배포</strong></div>
+          <div class="a">KTX2 · KHR_texture_basisu</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>다운로드 용량이 최우선</strong></div>
+          <div class="a">Basis ETC1S</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>배포 용량 + 고품질(노멀 등)</strong></div>
+          <div class="a">Basis UASTC (KTX2)</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>소스·웹 표시용 이미지</strong></div>
+          <div class="a">PNG / WebP (GPU 컨테이너 아님)</div>
+        </div>
+        <div class="decision-item">
+          <div class="q"><strong>구형 iOS/PowerVR 단독</strong></div>
+          <div class="a" style="background:rgba(251,113,133,.12);color:#fda4af;border-color:rgba(251,113,133,.25)">PVR (레거시)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. FAQ -->
+    <section id="faq">
+      <h2><span class="num">7</span> FAQ · 헷갈리기 쉬운 점</h2>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Q. KTX2랑 Basis는 다른 건가요?</h3>
+          <p>
+            층이 다릅니다. <strong style="color:#eef0f6">KTX2는 컨테이너</strong>(그릇), <strong style="color:#eef0f6">Basis는 그 안에 담기는 슈퍼컴프레션 방식</strong>입니다.
+            KTX2 안에 Basis(UASTC/ETC1S)를 넣어 배포하고 런타임에 트랜스코드하는 게 흔한 조합입니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 트랜스코딩이 재압축이랑 같나요?</h3>
+          <p>
+            아닙니다. 트랜스코딩은 Basis 중간 표현을 <strong style="color:#eef0f6">소스 재인코딩 없이</strong> 타깃 GPU 포맷으로 빠르게 변환합니다.
+            매번 원본에서 BC/ASTC를 새로 굽는 것보다 훨씬 빠릅니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. DDS는 모바일에서 못 쓰나요?</h3>
+          <p>
+            DDS가 담는 BC 포맷을 <strong style="color:#eef0f6">모바일 GPU가 대부분 지원하지 않기</strong> 때문에 실질적으로 부적합합니다.
+            모바일은 ASTC/ETC2를 담는 KTX2가 맞습니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 그냥 PNG를 런타임에 압축하면 안 되나요?</h3>
+          <p>
+            됩니다만, <strong style="color:#eef0f6">로드마다 디코드+블록 인코딩+밉 생성</strong> 비용이 큽니다.
+            미리 컨테이너로 구워두면 로딩이 빠르고 결과 품질도 안정적입니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 밉맵은 컨테이너가 담아주나요?</h3>
+          <p>
+            네. DDS·KTX2 모두 <strong style="color:#eef0f6">밉 체인 전체</strong>를 담습니다. 런타임에 밉을 다시 만들 필요가 없어
+            로딩이 빠르고, 품질 좋은 오프라인 밉 필터를 쓸 수 있습니다.
+          </p>
+        </article>
+        <article class="card">
+          <h3>Q. 어떤 GPU 포맷으로 압축할지는 어디서 정하나요?</h3>
+          <p>
+            컨테이너는 “그릇”이고, 실제 BC/ASTC/ETC 선택은 텍스처 용도에 달렸습니다.
+            그 기준은 허브의 <strong style="color:#eef0f6">GPU 텍스처 압축</strong> 가이드를 참고하세요.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- 8. Cheatsheet -->
+    <section>
+      <h2><span class="num">8</span> 실무 치트시트</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>상황</th>
+              <th>컨테이너</th>
+              <th>담는 방식</th>
+              <th>피하기</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PC/콘솔 전용 게임</td>
+              <td><strong>DDS</strong></td>
+              <td>BC1~7 + 밉</td>
+              <td>PNG를 런타임 압축</td>
+            </tr>
+            <tr>
+              <td>모바일 포함 멀티플랫폼</td>
+              <td><strong>KTX2</strong></td>
+              <td>ASTC 또는 Basis</td>
+              <td>DDS(모바일 미지원)</td>
+            </tr>
+            <tr>
+              <td>웹 / glTF 3D 에셋</td>
+              <td><strong>KTX2</strong></td>
+              <td>Basis(KHR_texture_basisu)</td>
+              <td>대용량 PNG 텍스처</td>
+            </tr>
+            <tr>
+              <td>다운로드 용량 최소화</td>
+              <td>KTX2</td>
+              <td><strong>Basis ETC1S</strong></td>
+              <td>무압축 컨테이너</td>
+            </tr>
+            <tr>
+              <td>배포 용량 + 고품질</td>
+              <td>KTX2</td>
+              <td><strong>Basis UASTC</strong></td>
+              <td>ETC1S(민감 데이터)</td>
+            </tr>
+            <tr>
+              <td>작업 원본 보관</td>
+              <td colspan="2"><strong>PNG / TGA / EXR</strong> (무손실 소스)</td>
+              <td>손실 소스로 재압축</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      <div>
+        <strong style="color:var(--text-muted)">컨테이너·전송 포맷 가이드</strong>
+        · <a href="index.html#container" style="color:var(--text-muted)">허브로 돌아가기</a>
+      </div>
+      <div>컨테이너는 “그릇”, 실제 GPU 압축 포맷 선택은 텍스처 압축 가이드를 함께 보세요.</div>
+    </footer>
+  </div>
+</body>
+</html>

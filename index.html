@@ -580,22 +580,20 @@
           <span class="badge badge-live">완성</span>
         </button>
 
-        <div class="nav-group">포맷 · 압축 (작성 예정)</div>
-
         <button type="button" class="nav-item" data-guide="container">
           <span class="nav-icon">KTX</span>
           <span class="nav-text">
             <strong>컨테이너·전송 포맷</strong>
             <span>DDS · KTX2 · Basis Universal</span>
           </span>
-          <span class="badge badge-soon">예정</span>
+          <span class="badge badge-live">완성</span>
         </button>
       </div>
 
       <div class="sidebar-foot">
         <div><a href="https://github.com/Ageia/icon-format-guide" target="_blank" rel="noopener">GitHub 저장소</a></div>
         <div style="margin-top:4px">언어 토글은 추후 지원 예정</div>
-        <div style="margin-top:6px;opacity:0.75" id="hubBuild">hub-build 2026-07-30-c</div>
+        <div style="margin-top:6px;opacity:0.75" id="hubBuild">hub-build 2026-08-01</div>
       </div>
     </aside>
 
@@ -635,84 +633,18 @@
           <iframe class="panel-frame" id="channelFrame" data-src="channel-packing-guide.html" title="채널 패킹 가이드" loading="lazy"></iframe>
         </section>
 
-        <!-- Placeholder guides -->
-        <section class="panel" id="panel-container" data-title="컨테이너·전송 포맷" data-sub="작성 예정 · 목차와 선택 뼈대">
-          <div class="panel-scroll"><div class="panel-inner" data-stub="container"></div></div>
+        <!-- Live: container/transmission format guide via iframe -->
+        <section class="panel" id="panel-container" data-title="컨테이너·전송 포맷" data-sub="완성 가이드 · DDS · KTX2 · Basis" data-standalone="container-format-guide.html">
+          <iframe class="panel-frame" id="containerFrame" data-src="container-format-guide.html" title="컨테이너·전송 포맷 가이드" loading="lazy"></iframe>
         </section>
       </div>
     </main>
   </div>
 
   <script>
-    const GUIDES = {
-      container: {
-        pills: ["DDS", "KTX2", "Basis"],
-        title: "컨테이너·전송 포맷 실전 가이드",
-        lead: "압축된 텍스처를 밉·큐브맵·메타데이터까지 담아 GPU로 그대로 올리는 컨테이너와, 배포용 슈퍼컴프레션(Basis)을 비교합니다.",
-        toc: ["컨테이너란", "DDS", "KTX2", "Basis Universal", "전송 vs GPU 포맷", "FAQ"],
-        cards: [
-          {
-            h: "다룰 핵심",
-            items: [
-              "왜 PNG가 아니라 컨테이너인가",
-              "DDS: 데스크톱 BC 표준",
-              "KTX2: 크로스플랫폼·Basis 내장",
-              "Basis: 하나로 여러 GPU 포맷 트랜스코드"
-            ]
-          },
-          {
-            h: "목표 독자",
-            items: ["엔진·툴 프로그래머", "에셋 파이프라인 담당", "웹/크로스플랫폼 배포 담당"]
-          }
-        ],
-        decisions: [
-          ["데스크톱, BC 위주", "DDS"],
-          ["크로스플랫폼 하나로", "KTX2"],
-          ["다운로드 용량이 핵심", "Basis Universal (트랜스코드)"],
-          ["런타임에 밉·큐브맵 통째로", "컨테이너로 GPU 직행"]
-        ],
-        note: "전송용(작게 받기)과 GPU용(그대로 올리기)의 차이를 표로 정리할 예정입니다."
-      }
-    };
-
-    function renderStub(key) {
-      const g = GUIDES[key];
-      if (!g) return "";
-      const pills = g.pills.map((p) => `<span class="pill">${p}</span>`).join("");
-      const toc = g.toc.map((t) => `<span>${t}</span>`).join("");
-      const cards = g.cards.map((c) => `
-        <article class="card">
-          <h4>${c.h}</h4>
-          <ul>${c.items.map((i) => `<li>${i}</li>`).join("")}</ul>
-        </article>`).join("");
-      const decisions = g.decisions.map(([q, a]) => `
-        <div class="decision-item">
-          <div class="q"><strong>${q}</strong></div>
-          <div class="a">${a}</div>
-        </div>`).join("");
-
-      return `
-        <div class="hero-card">
-          <div class="pills">${pills}<span class="pill">작성 예정</span></div>
-          <h3>${g.title}</h3>
-          <p>${g.lead}</p>
-        </div>
-        <h3 class="section-title">예정 목차</h3>
-        <div class="toc-mini">${toc}</div>
-        <div class="grid-2" style="margin-top:16px">${cards}</div>
-        <h3 class="section-title">초안 선택 가이드</h3>
-        <div class="decision">${decisions}</div>
-        <div class="callout"><strong>상태:</strong> ${g.note}</div>
-      `;
-    }
-
-    // 예전 index(redirect → format-guide.html) 캐시가 아닌지 표시
-    console.info("[hub] build 2026-07-30-c loaded", location.href);
-
-    // Fill stubs once
-    document.querySelectorAll("[data-stub]").forEach((el) => {
-      el.innerHTML = renderStub(el.getAttribute("data-stub"));
-    });
+    // 모든 가이드가 완성되어 iframe으로 로드됨 — 예정(stub) 렌더 머신은 제거함.
+    // 새 예정 탭을 추가하려면 data-stub 방식 대신 완성 가이드 파일 + iframe 패턴을 따를 것.
+    console.info("[hub] build 2026-08-01 loaded", location.href);
 
     const navItems = [...document.querySelectorAll(".nav-item")];
     const panels = [...document.querySelectorAll(".panel")];
