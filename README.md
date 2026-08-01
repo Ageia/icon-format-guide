@@ -35,6 +35,7 @@
 - `channel-packing-guide.html` — 채널 패킹 완성 가이드 (ORM·노멀·sRGB vs Linear)
 - `container-format-guide.html` — 컨테이너·전송 포맷 완성 가이드 (DDS·KTX2·Basis)
 - `webp-compare/` — WebP 품질별 압축 비교 툴 + 생성된 WebP 14단계 (`generate.py`로 재생성)
+- `texture-artifacts/` — 실제 BC1 압축 아티팩트 비교 이미지 (`generate.py`, 자체 BC1 인코더)
 - `AGENTS.md` — 새 세션·AI용 프로젝트 규칙/맥락
 - `docs/TODO.md` — 하고 싶은 일 백로그 (Now / Next / Later)
 - `badge_cloud.*` / `badge_star.*` — 멀티 포맷 샘플 에셋 (WebP 비교 소스로도 사용)

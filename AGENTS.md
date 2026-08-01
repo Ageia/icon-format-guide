@@ -38,6 +38,7 @@
 | `channel-packing-guide.html` | 채널 패킹 **완성** 가이드 (channel 탭 iframe, format-guide 톤) |
 | `container-format-guide.html` | 컨테이너·전송 포맷 **완성** 가이드 (container 탭 iframe, format-guide 톤) |
 | `webp-compare/` | WebP 품질별 압축 비교 툴 + 생성된 WebP 14단계 (raster 탭 iframe). 소스는 자체 에셋 `badge_star.png` |
+| `texture-artifacts/` | 실제 BC1 압축 아티팩트 비교 이미지 + `generate.py`(자체 BC1 인코더). 텍스처 가이드에 임베드 |
 | `README.md` | 사람용 소개·링크 표 |
 | `AGENTS.md` | AI/다음 세션용 규칙·맥락 |
 | `docs/TODO.md` | 백로그 (Now / Next / Later / Done) |

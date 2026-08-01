@@ -455,6 +455,31 @@
       background: linear-gradient(90deg, var(--rose), var(--amber));
     }
 
+    /* Artifact comparison */
+    .artifact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .artifact figure { margin: 0; }
+    .artifact img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid var(--border-strong);
+      background: #0d1218;
+      image-rendering: pixelated;
+    }
+    .artifact figcaption {
+      margin-top: 8px;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    @media (max-width: 640px) { .artifact { grid-template-columns: 1fr; } }
+
     footer {
       margin-top: 48px;
       padding-top: 24px;
@@ -682,6 +707,39 @@
         <div class="callout">
           <strong>그래서 노멀맵은 BC5:</strong> 노멀의 X·Y만 2채널로 정밀 저장하고 Z는 셰이더에서
           <code>z = √(1 − x² − y²)</code>로 재구성합니다. RGB로 통째 압축하면 라이팅이 울퉁불퉁해지는 이유가 이것.
+        </div>
+
+        <h3 style="margin-top:22px">실제 BC1 컬러 압축 — 밴딩 눈으로 보기</h3>
+        <p style="font-size:13.5px">
+          아래는 합성 그라데이션과 이 저장소의 <code>badge_star</code>를 <strong style="color:#eef0f6">실제 BC1 알고리즘</strong>
+          (4×4 블록 · RGB565 엔드포인트 2개 · 4색 팔레트)으로 압축·복원한 결과입니다.
+          블록당 색이 4개뿐이라, 부드러운 그라데이션에서 <strong style="color:#eef0f6">4×4 블록 계단과 색 밴딩</strong>이 드러납니다.
+        </p>
+        <div class="artifact">
+          <figure>
+            <img src="texture-artifacts/gradient_orig_zoom.png" alt="원본 그라데이션 확대" />
+            <figcaption>원본 (무손실) · 확대</figcaption>
+          </figure>
+          <figure>
+            <img src="texture-artifacts/gradient_bc1_zoom.png" alt="BC1 압축 그라데이션 확대" />
+            <figcaption>BC1 · 4×4 블록 계단·밴딩</figcaption>
+          </figure>
+        </div>
+        <div class="artifact">
+          <figure>
+            <img src="texture-artifacts/badge_orig.png" alt="원본 badge_star" />
+            <figcaption>badge_star 원본 (무손실)</figcaption>
+          </figure>
+          <figure>
+            <img src="texture-artifacts/badge_bc1.png" alt="BC1 압축 badge_star" />
+            <figcaption>BC1 압축 · PSNR 36.7 dB</figcaption>
+          </figure>
+        </div>
+        <div class="callout warn" style="margin-top:12px">
+          <strong>포인트:</strong> 매끈한 그라데이션은 BC1이 특히 약한 케이스라 <strong>BC7</strong>(모드가 많음)이나 무압축이 낫고,
+          BC1은 밴딩이 덜 보이는 배경·디테일 텍스처에 씁니다.
+          (위 이미지는 bounding-box 엔드포인트 기반 구현으로, 실제 엔진 인코더는 조금 더 나은 품질을 냅니다.
+          재생성: <code>texture-artifacts/generate.py</code>)
         </div>
       </div>
     </section>
