@@ -7,9 +7,8 @@ AI·새 세션은 작업 전후 이 파일을 갱신한다.
 
 ## 지금 하기 (Now)
 
-- [ ] (심화) 5개 가이드 기술 정확성 웹 교차검증 (ASTC bpp·glTF ORM·Basis·BC 모드)
-- [ ] (심화) 새 탭 후보: 밉맵·필터링 (mip·이방성·LOD)
-- [ ] (심화) 가이드 간 실제 링크 연결, badge_cloud 비교 세트
+- [ ] (심화) 새 탭 후보: SDF 텍스트/아이콘, 스프라이트 아틀라스 패킹
+- [ ] (심화) badge_cloud 비교 세트, 한/영 토글
 
 ## 다음에 (Next)
 
@@ -27,6 +26,9 @@ AI·새 세션은 작업 전후 이 파일을 갱신한다.
 
 ## 완료 (Done) — 최근
 
+- [x] 밉맵·텍스처 필터링 완성 가이드 (`mipmap-filtering-guide.html`, `#mipmap`) — 실측 에일리어싱 데모(`mip-demo/`)
+- [x] 5개 가이드 기술 정확성 웹 교차검증 — 12개 항목 전부 VERIFIED(수정 없음), ORM 관례 표현만 미세 조정
+- [x] 가이드 간 상호 링크 연결 (`target="_top"`), 푸터 허브 링크 nested 로드 버그 수정
 - [x] 소스 에셋 `assets/`로 폴더 정리 (badge_* 18개, git rename)
 - [x] 채널 패킹 가이드에 실제 채널 분해 이미지 추가 (`channel-demo/` — 합성 ORM → R/G/B 분해)
 - [x] 래스터 탭을 완성 가이드로 승격 (`raster-format-guide.html`) — PNG·JPEG·WebP·AVIF·GIF 실측 용량, JPEG 알파 함정 실제 이미지, WebP 스크러버 링크 (`raster-compare/`)

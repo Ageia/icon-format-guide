@@ -24,6 +24,7 @@
 | `#texture` | GPU 텍스처 압축 (BC·ASTC·ETC2) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#texture) |
 | `#channel` | 채널 패킹 (ORM·노멀·sRGB) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#channel) |
 | `#container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#container) |
+| `#mipmap` | 밉맵·텍스처 필터링 (Bilinear·Trilinear·Aniso) | 완성 | [열기](https://ageia.github.io/icon-format-guide/index.html#mipmap) |
 
 허브 왼쪽 아래 `hub-build …` 문구가 보이면 최신 허브입니다. 예전 페이지가 뜨면 **Ctrl+F5** 로 새로고침하세요.
 
@@ -34,11 +35,13 @@
 - `texture-compression-guide.html` — GPU 텍스처 압축 완성 가이드 (BC·ASTC·ETC2)
 - `channel-packing-guide.html` — 채널 패킹 완성 가이드 (ORM·노멀·sRGB vs Linear)
 - `container-format-guide.html` — 컨테이너·전송 포맷 완성 가이드 (DDS·KTX2·Basis)
+- `mipmap-filtering-guide.html` — 밉맵·텍스처 필터링 완성 가이드 (실측 에일리어싱 데모)
 - `raster-format-guide.html` — 래스터 포맷 완성 가이드 (PNG·JPEG·WebP·AVIF 실측·알파 함정)
 - `raster-compare/` — 크로스 포맷 실측 세트 + `generate.py` (PNG/WebP/AVIF/JPEG/GIF)
 - `webp-compare/` — WebP 품질별 압축 비교 스크러버 툴 + WebP 14단계 (`generate.py`로 재생성)
 - `texture-artifacts/` — 실제 BC1 압축 아티팩트 비교 이미지 (`generate.py`, 자체 BC1 인코더)
 - `channel-demo/` — 합성 ORM 채널 분해 데모 이미지 (`generate.py`)
+- `mip-demo/` — 밉맵/에일리어싱 데모 이미지 (`generate.py`, 지멘스 스타 축소)
 - `AGENTS.md` — 새 세션·AI용 프로젝트 규칙/맥락
 - `docs/TODO.md` — 하고 싶은 일 백로그 (Now / Next / Later)
 - `assets/` — 멀티 포맷 샘플 에셋 (`badge_cloud.*` / `badge_star.*` / `badge_star_anim.*`, 압축 비교 소스로도 사용)

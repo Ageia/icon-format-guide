@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>파일 포맷·압축 가이드 허브</title>
-  <meta name="description" content="파일 포맷과 텍스처 압축 기법을 “언제 뭘 쓸지” 고르는 실전 치트시트 모음. 아이콘·래스터 포맷, GPU 텍스처 압축, 채널 패킹, 컨테이너 포맷." />
+  <meta name="description" content="파일 포맷과 텍스처 압축 기법을 “언제 뭘 쓸지” 고르는 실전 치트시트 모음. 아이콘·래스터 포맷, GPU 텍스처 압축, 채널 패킹, 컨테이너 포맷, 밉맵·필터링." />
   <!-- hub-build: 2026-08-01 — 예전 redirect용 index 캐시면 이 주석이 없음 -->
   <style>
     :root {
@@ -588,6 +588,15 @@
           </span>
           <span class="badge badge-live">완성</span>
         </button>
+
+        <button type="button" class="nav-item" data-guide="mipmap">
+          <span class="nav-icon">MIP</span>
+          <span class="nav-text">
+            <strong>밉맵·텍스처 필터링</strong>
+            <span>Bilinear · Trilinear · Aniso</span>
+          </span>
+          <span class="badge badge-live">완성</span>
+        </button>
       </div>
 
       <div class="sidebar-foot">
@@ -636,6 +645,11 @@
         <!-- Live: container/transmission format guide via iframe -->
         <section class="panel" id="panel-container" data-title="컨테이너·전송 포맷" data-sub="완성 가이드 · DDS · KTX2 · Basis" data-standalone="container-format-guide.html">
           <iframe class="panel-frame" id="containerFrame" data-src="container-format-guide.html" title="컨테이너·전송 포맷 가이드" loading="lazy"></iframe>
+        </section>
+
+        <!-- Live: mipmap & filtering guide via iframe -->
+        <section class="panel" id="panel-mipmap" data-title="밉맵·텍스처 필터링" data-sub="완성 가이드 · 밉맵·필터링·이방성" data-standalone="mipmap-filtering-guide.html">
+          <iframe class="panel-frame" id="mipmapFrame" data-src="mipmap-filtering-guide.html" title="밉맵·텍스처 필터링 가이드" loading="lazy"></iframe>
         </section>
       </div>
     </main>

@@ -42,6 +42,7 @@
 | `webp-compare/` | WebP 품질별 압축 비교 스크러버 툴 + WebP 14단계. raster 가이드에서 버튼으로 연결. 소스 `assets/badge_star.png` |
 | `texture-artifacts/` | 실제 BC1 압축 아티팩트 비교 이미지 + `generate.py`(자체 BC1 인코더). 텍스처 가이드에 임베드 |
 | `channel-demo/` | 합성 ORM 채널 분해 데모 이미지 + `generate.py`. 채널 패킹 가이드에 임베드 |
+| `mip-demo/` | 밉맵/에일리어싱 데모 이미지 + `generate.py`(지멘스 스타 축소). 밉맵 가이드에 임베드 |
 | `README.md` | 사람용 소개·링크 표 |
 | `AGENTS.md` | AI/다음 세션용 규칙·맥락 |
 | `docs/TODO.md` | 백로그 (Now / Next / Later / Done) |
@@ -68,6 +69,7 @@
 | `texture` | GPU 텍스처 압축 (BC·ASTC·ETC2·PVRTC) | **완성** (`texture-compression-guide.html`) |
 | `channel` | 채널 패킹 (ORM·노멀·sRGB vs Linear) | **완성** (`channel-packing-guide.html`) |
 | `container` | 컨테이너·전송 포맷 (DDS·KTX2·Basis) | **완성** (`container-format-guide.html`) |
+| `mipmap` | 밉맵·텍스처 필터링 (Bilinear·Trilinear·Aniso) | **완성** (`mipmap-filtering-guide.html`) |
 
 > 언리얼 전용 탭(`material`·`nanite`·`import`·`lighting`·`vfx`·`collision`)은 제거됨. 되살리지 말 것.
 
@@ -103,11 +105,15 @@
 상세·체크리스트는 **`docs/TODO.md`** 가 소스 오브 트루스.  
 우선순위 제안만 여기 요약:
 
-**모든 탭(icon·raster·texture·channel·container) 완성됨.** 다음은 심화·품질 작업 위주:
+**6개 탭(icon·raster·texture·channel·container·mipmap) 완성됨.** 5개 가이드 기술 정확성 웹 검수 통과(수정 없음), 실측 이미지·상호 링크 반영 완료. 다음은 심화·확장 위주:
 
-1. Now: 래스터 탭 JPEG/AVIF 비교 보강, 텍스처 가이드 아티팩트(BC1 밴딩 등) 비교 이미지  
-2. Next: 채널 패킹 채널 분해 샘플 이미지, 가이드 간 상호 링크 점검  
-3. Later: 한/영 토글, repo 이름 변경(포맷·압축 성격에 맞게) 등
+1. Now: 새 탭 후보(예: SDF·스프라이트 아틀라스), badge_cloud 비교 세트  
+2. Next: 한/영 토글, 가이드별 실측 이미지 추가 보강  
+3. Later: repo 이름 변경(포맷·압축 성격에 맞게) 등
+
+### iframe 가이드의 링크 규칙 (중요)
+- 가이드는 허브 iframe 안에서 열리므로, **다른 탭/허브로 가는 `index.html#…` 링크는 반드시 `target="_top"`**. 없으면 iframe 안에 허브가 nested 로드됨.
+- 외부 툴(예: WebP 스크러버)로 가는 링크는 `target="_blank"`.
 
 ## 검증
 
