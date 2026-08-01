@@ -474,6 +474,22 @@
 
     .callout.warn strong { color: #fde68a; }
 
+    /* Pack → split visual */
+    .pack-demo { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-top: 14px; }
+    .pack-demo figure { margin: 0; }
+    .pack-demo .frame { border-radius: 10px; border: 1px solid var(--border-strong); overflow: hidden; background: #0d1218; }
+    .pack-demo img { display: block; width: 100%; }
+    .pack-demo .packed { width: 176px; flex-shrink: 0; }
+    .pack-demo .arrow { color: var(--text-dim); font-size: 24px; font-weight: 800; }
+    .pack-demo .split { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; flex: 1; min-width: 240px; }
+    .pack-demo figcaption { margin-top: 6px; text-align: center; font-size: 11.5px; color: var(--text-dim); font-family: var(--mono); }
+    .pack-demo figcaption .ch { margin-right: 4px; }
+    @media (max-width: 640px) {
+      .pack-demo { flex-direction: column; align-items: stretch; }
+      .pack-demo .packed { width: 100%; }
+      .pack-demo .arrow { transform: rotate(90deg); align-self: center; }
+    }
+
     footer {
       margin-top: 48px;
       padding-top: 24px;
@@ -672,6 +688,38 @@
         <div class="callout">
           <strong>배치 우선순위 팁:</strong> 눈에 가장 민감한 데이터(예: 러프니스)를
           <strong>압축 손상이 적은 채널</strong>에 두는 게 좋습니다. 자세한 건 아래 “압축과의 상호작용” 참고.
+        </div>
+
+        <h3 style="margin-top:22px">실제로 분해해 보기</h3>
+        <p style="font-size:13.5px">
+          아래는 서로 다른 <strong style="color:#eef0f6">흑백 데이터 맵 3장</strong>을 한 텍스처의 R/G/B에 넣은(ORM 패킹) 모습과,
+          그것을 다시 채널별로 분해한 것입니다. 합쳐서 <strong style="color:#eef0f6">컬러로 보면 “색”이 아니라 데이터라 이상해 보이지만</strong>,
+          셰이더는 <code>tex.r</code>·<code>tex.g</code>·<code>tex.b</code>로 각각 꺼내 씁니다.
+        </p>
+        <div class="pack-demo">
+          <figure class="packed">
+            <div class="frame"><img src="channel-demo/orm_packed.png" alt="ORM으로 패킹된 텍스처" loading="lazy" /></div>
+            <figcaption>ORM 패킹 (RGB 한 장)</figcaption>
+          </figure>
+          <div class="arrow">→</div>
+          <div class="split">
+            <figure>
+              <div class="frame"><img src="channel-demo/orm_ao.png" alt="R 채널 = AO" loading="lazy" /></div>
+              <figcaption><span class="ch ch-r">R</span>AO</figcaption>
+            </figure>
+            <figure>
+              <div class="frame"><img src="channel-demo/orm_rough.png" alt="G 채널 = Roughness" loading="lazy" /></div>
+              <figcaption><span class="ch ch-g">G</span>Rough</figcaption>
+            </figure>
+            <figure>
+              <div class="frame"><img src="channel-demo/orm_metal.png" alt="B 채널 = Metallic" loading="lazy" /></div>
+              <figcaption><span class="ch ch-b">B</span>Metal</figcaption>
+            </figure>
+          </div>
+        </div>
+        <div class="callout">
+          <strong>개념 예시(합성 맵):</strong> 위 세 맵은 설명용으로 생성한 것입니다(방사형 AO · 대각 러프니스 · 링 메탈릭).
+          실제 프로젝트에선 베이크·스캔한 맵을 같은 방식으로 패킹합니다. 재생성: <code>channel-demo/generate.py</code>
         </div>
       </div>
     </section>

@@ -41,6 +41,7 @@
 | `raster-compare/` | 크로스 포맷 실측 세트(PNG/WebP/AVIF/JPEG/GIF) + `generate.py`. 소스는 `assets/badge_star.png`에 원형 알파 마스크 |
 | `webp-compare/` | WebP 품질별 압축 비교 스크러버 툴 + WebP 14단계. raster 가이드에서 버튼으로 연결. 소스 `assets/badge_star.png` |
 | `texture-artifacts/` | 실제 BC1 압축 아티팩트 비교 이미지 + `generate.py`(자체 BC1 인코더). 텍스처 가이드에 임베드 |
+| `channel-demo/` | 합성 ORM 채널 분해 데모 이미지 + `generate.py`. 채널 패킹 가이드에 임베드 |
 | `README.md` | 사람용 소개·링크 표 |
 | `AGENTS.md` | AI/다음 세션용 규칙·맥락 |
 | `docs/TODO.md` | 백로그 (Now / Next / Later / Done) |

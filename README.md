@@ -38,6 +38,7 @@
 - `raster-compare/` — 크로스 포맷 실측 세트 + `generate.py` (PNG/WebP/AVIF/JPEG/GIF)
 - `webp-compare/` — WebP 품질별 압축 비교 스크러버 툴 + WebP 14단계 (`generate.py`로 재생성)
 - `texture-artifacts/` — 실제 BC1 압축 아티팩트 비교 이미지 (`generate.py`, 자체 BC1 인코더)
+- `channel-demo/` — 합성 ORM 채널 분해 데모 이미지 (`generate.py`)
 - `AGENTS.md` — 새 세션·AI용 프로젝트 규칙/맥락
 - `docs/TODO.md` — 하고 싶은 일 백로그 (Now / Next / Later)
 - `assets/` — 멀티 포맷 샘플 에셋 (`badge_cloud.*` / `badge_star.*` / `badge_star_anim.*`, 압축 비교 소스로도 사용)

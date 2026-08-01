@@ -7,8 +7,9 @@ AI·새 세션은 작업 전후 이 파일을 갱신한다.
 
 ## 지금 하기 (Now)
 
-- [ ] (심화) badge_cloud 등 다른 에셋으로도 압축 비교 세트 생성 옵션
-- [ ] (심화) 채널 패킹 가이드에 실제 채널 분해 샘플 이미지
+- [ ] (심화) 5개 가이드 기술 정확성 웹 교차검증 (ASTC bpp·glTF ORM·Basis·BC 모드)
+- [ ] (심화) 새 탭 후보: 밉맵·필터링 (mip·이방성·LOD)
+- [ ] (심화) 가이드 간 실제 링크 연결, badge_cloud 비교 세트
 
 ## 다음에 (Next)
 
@@ -26,6 +27,8 @@ AI·새 세션은 작업 전후 이 파일을 갱신한다.
 
 ## 완료 (Done) — 최근
 
+- [x] 소스 에셋 `assets/`로 폴더 정리 (badge_* 18개, git rename)
+- [x] 채널 패킹 가이드에 실제 채널 분해 이미지 추가 (`channel-demo/` — 합성 ORM → R/G/B 분해)
 - [x] 래스터 탭을 완성 가이드로 승격 (`raster-format-guide.html`) — PNG·JPEG·WebP·AVIF·GIF 실측 용량, JPEG 알파 함정 실제 이미지, WebP 스크러버 링크 (`raster-compare/`)
 - [x] 텍스처 가이드에 실제 BC1 압축 아티팩트 비교 이미지 추가 (`texture-artifacts/` — 자체 BC1 인코더로 생성, 밴딩·블록 계단 시각화)
 - [x] 컨테이너·전송 포맷 완성 가이드 (`container-format-guide.html`, `#container`) — DDS·KTX2·Basis, 전송 vs GPU 두 축
