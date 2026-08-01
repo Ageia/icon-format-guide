@@ -40,7 +40,7 @@
 - `texture-artifacts/` — 실제 BC1 압축 아티팩트 비교 이미지 (`generate.py`, 자체 BC1 인코더)
 - `AGENTS.md` — 새 세션·AI용 프로젝트 규칙/맥락
 - `docs/TODO.md` — 하고 싶은 일 백로그 (Now / Next / Later)
-- `badge_cloud.*` / `badge_star.*` — 멀티 포맷 샘플 에셋 (WebP 비교 소스로도 사용)
+- `assets/` — 멀티 포맷 샘플 에셋 (`badge_cloud.*` / `badge_star.*` / `badge_star_anim.*`, 압축 비교 소스로도 사용)
 
 ## For next session / AI
 

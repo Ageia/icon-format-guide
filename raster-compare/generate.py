@@ -14,7 +14,7 @@ import os, json
 from PIL import Image, ImageDraw, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, os.pardir, "badge_star.png")
+SRC = os.path.join(HERE, os.pardir, "assets", "badge_star.png")
 
 base = Image.open(SRC).convert("RGBA")
 w, h = base.size

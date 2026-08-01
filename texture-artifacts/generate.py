@@ -145,7 +145,7 @@ def main():
     save(zoom(grad_bc1, zbox), "gradient_bc1_zoom.png")
 
     # 2) badge asset (flatten alpha over white so it's a pure color-banding demo)
-    star = Image.open(os.path.join(HERE, os.pardir, "badge_star.png")).convert("RGBA")
+    star = Image.open(os.path.join(HERE, os.pardir, "assets", "badge_star.png")).convert("RGBA")
     star = star.resize((256, 256), Image.LANCZOS)
     bg = Image.new("RGBA", star.size, (255, 255, 255, 255))
     flat = Image.alpha_composite(bg, star).convert("RGB")
